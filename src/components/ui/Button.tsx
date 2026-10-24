@@ -6,7 +6,7 @@ type Size = 'sm' | 'md' | 'lg'
 
 const VARIANTS: Record<Variant, string> = {
   // Primary: gold leaf with a fine top highlight
-  gold: 'bg-gold-grad text-ink shadow-[inset_0_1px_0_rgb(255_255_255/0.4),var(--shadow-gold)] hover:brightness-[1.05]',
+  gold: 'sheen bg-gold-grad text-ink shadow-[inset_0_1px_0_rgb(255_255_255/0.4),var(--shadow-gold)] hover:brightness-[1.05]',
   // Gold outline on dark grounds
   'outline-gold': 'border border-gold/70 text-gold-light hover:bg-gold/10 hover:border-gold',
   // Gold outline on light grounds

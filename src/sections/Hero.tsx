@@ -5,14 +5,19 @@ import Magnet from '../components/reactbits/Magnet'
 import { ButtonLink } from '../components/ui/Button'
 import { Medallion } from '../components/ui/Medallion'
 import { useLang } from '../i18n/LanguageProvider'
-import { gsap, MOTION_OK, SplitText, useGSAP } from '../motion/gsap'
+import { gsap, useGSAP } from '../motion/gsap'
+import { fontsReady, splitLines } from '../motion/splitLines'
+import { CLEAR, DURATION, EASE_IN, EASE_LONG, MQ, origins, scale } from '../motion/tokens'
 
 const TRUST_ICONS = [UsersRound, Landmark, Globe2]
 
 /**
  * The client's hero: the family-and-skyline photograph across the page, dissolving into
  * ivory behind the copy. Phones get the client's mobile slide above the copy.
- * This is the page's one orchestrated entrance; on scroll the photo drifts slower than the page.
+ *
+ * One load timeline (not scroll-driven): photo settles 1.08 → 1 · headline by lines from 0.2s ·
+ * gold rule from the reading start at 0.7s · lead 0.8s · buttons 1.0s · trust cards 1.2s.
+ * On desktop the photo drifts and the copy dims to 0.6 as the hero scrolls away.
  */
 export function Hero() {
   const { t, lang } = useLang()
@@ -21,25 +26,39 @@ export function Hero() {
   useGSAP(
     () => {
       const mm = gsap.matchMedia()
-      mm.add(MOTION_OK, () => {
-        const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
-        tl.fromTo('[data-hero-photo]', { autoAlpha: 0, scale: 1.08 }, { autoAlpha: 1, scale: 1, duration: 2.4 }, 0)
-          .from('[data-hero-rule]', { scaleX: 0, duration: 1.1, transformOrigin: lang === 'ar' ? '100% 50%' : '0% 50%' }, 0.55)
-          .from('[data-hero-text]', { autoAlpha: 0, y: 18, duration: 0.85, stagger: 0.09, ease: 'power3.out' }, 0.6)
-          .from('[data-hero-trust]', { autoAlpha: 0, y: 14, duration: 0.7, stagger: 0.08, ease: 'power3.out' }, 0.95)
+      mm.add({ motion: MQ.motion, mobile: MQ.mobile }, (ctx) => {
+        const { motion, mobile } = ctx.conditions as { motion: boolean; mobile: boolean }
+        if (!motion) return
+        const { y, d } = scale(mobile)
+        const o = origins()
 
-        // Headline by lines only — Arabic letters stay joined.
-        SplitText.create('[data-hero-title]', {
-          type: 'lines',
-          mask: 'lines',
-          linesClass: 'split-line',
-          autoSplit: true,
-          onSplit: (self) => gsap.from(self.lines, { yPercent: 105, duration: 1.15, stagger: 0.1, ease: 'expo.out', delay: 0.2 }),
+        const tl = gsap.timeline({ defaults: { ease: EASE_IN } })
+        tl.fromTo('[data-hero-photo]', { scale: 1.08 }, { scale: 1, duration: 2.4, ease: 'power2.out' }, 0)
+          .fromTo('[data-hero-rule]', { scaleX: 0, transformOrigin: o.start }, { scaleX: 1, duration: d(0.8), ease: EASE_LONG }, 0.7)
+          .fromTo('[data-hero-text]', { autoAlpha: 0, y }, { autoAlpha: 1, y: 0, duration: d(DURATION), clearProps: CLEAR }, 0.8)
+          .fromTo('[data-hero-cta] > *', { autoAlpha: 0, y }, { autoAlpha: 1, y: 0, duration: d(DURATION), stagger: 0.1, clearProps: CLEAR }, 1.0)
+          .fromTo('[data-hero-trust]', { autoAlpha: 0, y: mobile ? 24 : 40 }, { autoAlpha: 1, y: 0, duration: d(DURATION), stagger: 0.12, clearProps: CLEAR }, 1.2)
+          .fromTo('[data-hero-icon]', { scale: 0.7 }, { scale: 1, duration: d(0.6), stagger: 0.12, clearProps: CLEAR }, 1.3)
+
+        // Headline by lines (words grouped into lines — Arabic letters stay joined). Waits at most
+        // 200ms for the webfont so the lines are the real ones and the headline still starts by 0.3s.
+        const t0 = performance.now()
+        const title = ref.current!.querySelector<HTMLElement>('[data-hero-title]')!
+        let revertTitle = () => {}
+        const buildTitle = ctx.add('buildTitle', () => {
+          const s = splitLines(title)
+          revertTitle = s.revert
+          gsap.set(title, { visibility: 'visible' })
+          gsap.fromTo(s.lines, { yPercent: 100 }, { yPercent: 0, duration: d(1), stagger: 0.12, ease: EASE_IN, delay: Math.max(0, 0.2 - (performance.now() - t0) / 1000), onComplete: s.revert })
         })
+        fontsReady(200).then(() => !ctx.isReverted && buildTitle())
 
-        const scrub = { trigger: ref.current, start: 'top top', end: 'bottom top', scrub: true }
-        gsap.to('[data-hero-drift]', { yPercent: 10, scale: 1.06, ease: 'none', scrollTrigger: scrub })
-        gsap.to('[data-hero-copy]', { y: -70, autoAlpha: 0.2, ease: 'none', scrollTrigger: { ...scrub, end: 'bottom 25%' } })
+        if (!mobile) {
+          const scrub = { trigger: ref.current, start: 'top top', end: 'bottom top', scrub: true }
+          gsap.fromTo('[data-hero-drift]', { yPercent: 0 }, { yPercent: 10, ease: 'none', scrollTrigger: scrub })
+          gsap.fromTo('[data-hero-copy]', { opacity: 1 }, { opacity: 0.6, ease: 'none', scrollTrigger: scrub })
+        }
+        return () => revertTitle()
       })
     },
     { scope: ref, dependencies: [lang] },
@@ -94,7 +113,7 @@ export function Hero() {
           <p data-hero-text className="text-lead mt-6 max-w-[56ch] text-muted">
             {t.hero.text}
           </p>
-          <div data-hero-text className="mt-8 flex flex-wrap items-center gap-3 sm:gap-4">
+          <div data-hero-cta className="mt-8 flex flex-wrap items-center gap-3 sm:gap-4">
             <Magnet padding={60} magnetStrength={5} maxOffset={8} spring={{ stiffness: 170, damping: 20 }}>
               <ButtonLink href="/#consultation" variant="gold" size="lg">
                 <CalendarDays className="size-5" strokeWidth={1.6} aria-hidden="true" />
@@ -111,10 +130,16 @@ export function Hero() {
             {t.hero.trust.map((item, i) => {
               const Icon = TRUST_ICONS[i]
               return (
-                <li key={item} data-hero-trust className="flex items-center gap-3 rounded-[var(--radius-card)] border border-stone/80 bg-white/70 p-3 text-[0.86rem] font-medium leading-snug text-fg/80 shadow-[var(--shadow-card)] backdrop-blur-[0.125rem]">
-                  <Medallion size="sm">
-                    <Icon strokeWidth={1.6} aria-hidden="true" />
-                  </Medallion>
+                <li
+                  key={item}
+                  data-hero-trust
+                  className="flex items-center gap-3 rounded-[var(--radius-card)] border border-stone/80 bg-white/70 p-3 text-[0.86rem] font-medium leading-snug text-fg/80 shadow-[var(--shadow-card)] backdrop-blur-[0.125rem] transition-[translate,box-shadow,border-color] duration-300 ease-[var(--ease-out-quart)] can-hover:hover:-translate-y-1 can-hover:hover:border-gold/40 can-hover:hover:shadow-[var(--shadow-lift)]"
+                >
+                  <span data-hero-icon className="shrink-0">
+                    <Medallion size="sm">
+                      <Icon strokeWidth={1.6} aria-hidden="true" />
+                    </Medallion>
+                  </span>
                   {item}
                 </li>
               )

@@ -13,6 +13,16 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="UAE Non-Muslim Family Law — Ahmed El-Shawi Legal Consultancy" />
     <meta property="og:image" content="/og-image.webp" />
+    <script>
+      // Animation start states apply only with JavaScript; if the app has not started within
+      // 4s (script blocked or failed), they are lifted so the pre-rendered content stays visible.
+      ;(function (d) {
+        d.classList.add('js-anim')
+        setTimeout(function () {
+          if (!window.__appReady) d.classList.remove('js-anim')
+        }, 4000)
+      })(document.documentElement)
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -117,6 +117,8 @@ SplitText.create('.hero-title', {
 
 For Arabic / RTL text, split by `lines` or `words` only — never `chars`, which breaks letter joining.
 
+> **Project note:** SplitText's `lines` detection assumes left-to-right text and returns a single line for multi-line Arabic headings. This project uses `src/motion/splitLines.ts` (groups words by vertical position) for line reveals instead.
+
 ### React: use `useGSAP`, not `useEffect`
 
 ```jsx

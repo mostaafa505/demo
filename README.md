@@ -15,7 +15,7 @@ The layout follows the client's reference designs (`references/`, `references/cl
 ```bash
 npm install
 npm run dev       # local development
-npm run build     # type-check + production build into dist/
+npm run build     # type-check, client build, then pre-render / and /en to static HTML (scripts/prerender.mjs)
 npm run preview   # serve the production build
 ```
 
@@ -29,7 +29,9 @@ Vercel builds it with the settings in `vercel.json` (Vite, `dist/`, SPA rewrites
 | Phones, email, address, hours, socials, TRN | `src/config/site.ts` |
 | Design tokens (colours, type scale, radii) | `src/styles/index.css` (`@theme`) |
 | Smooth scroll + GSAP setup | `src/motion/` |
-| Scroll reveals (`data-reveal="title" / "panel" / "fade"`, `data-reveal-group`) | `src/motion/useReveal.ts` |
+| Motion tokens (eases, durations, breakpoints) | `src/motion/tokens.ts` |
+| Scroll animations declared in markup (`data-anim="section-head" / "title" / "fade-up" / "stagger" / "img-reveal" / "line" / "counter"`) | `src/motion/useAnim.ts` |
+| RTL-safe line splitting for heading reveals | `src/motion/splitLines.ts` |
 | Header, mega-menu, mobile menu, footer, action bar | `src/components/layout/` |
 | Home sections | `src/sections/` |
 | React Bits components (Magnet on the hero CTA, SpotlightCard on quick tools) | `src/components/reactbits/` |
@@ -42,11 +44,16 @@ the right language, so navigation links already work.
 
 ## Motion
 
-One loop drives everything: Lenis runs on `gsap.ticker` and feeds `ScrollTrigger.update`. Motion is
-deliberately quiet: one hero entrance (the arch outline draws, the photo rises inside it, the headline
-follows by lines — Arabic is never split by characters), then short once-only reveals and counters.
-With `prefers-reduced-motion`, Lenis stops smoothing and nothing animates. Skills used: `.claude/skills/frontend-design`,
-`.claude/skills/web-motion`.
+- One loop: Lenis (`duration: 1.1`) runs on `gsap.ticker` and feeds `ScrollTrigger.update`.
+- Start states live in CSS under `html.js-anim` and only when motion is welcome; an inline script in
+  `index.html` adds the class before first paint and removes it if the app has not started within 4s,
+  so content is never left hidden.
+- Every entrance: `power3.out`, 0.9s, 0.08s stagger, rises 32px (18px on phones, 20% faster), starts at
+  `top 85%`, plays once. Long travels use `power2.inOut`. Lines and wipes run from the reading start
+  (right in Arabic).
+- Headings are split by words grouped into lines (`splitLines.ts`) — never by characters, so Arabic stays
+  joined. GSAP's SplitText is not used: its line detection assumes left-to-right text.
+- `prefers-reduced-motion`: nothing is hidden and nothing moves; counters show their final value.
 
 ## Placeholders to review with the client
 

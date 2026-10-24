@@ -8,27 +8,27 @@ import { SectionTitle } from '../components/ui/SectionTitle'
 import { SmartLink } from '../components/ui/SmartLink'
 import { TextLink } from '../components/ui/TextLink'
 import { useLang } from '../i18n/LanguageProvider'
-import { useReveal } from '../motion/useReveal'
+import { useAnim } from '../motion/useAnim'
 
 export function Services() {
   const { t } = useLang()
   const ref = useRef<HTMLElement>(null)
-  useReveal(ref)
+  useAnim(ref)
 
   return (
     <section ref={ref} id="services" aria-labelledby="services-title" className="bg-ivory pb-16 pt-8 lg:pb-20 lg:pt-6">
       <div className="container-site">
         <SectionTitle id="services-title" title={t.services.title} lead={t.services.lead} action={<TextLink href="/services">{t.services.viewAll}</TextLink>} />
 
-        <ul data-reveal-group className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-4 lg:mt-12 lg:gap-6">
+        <ul data-anim="stagger" className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-4 lg:mt-12 lg:gap-6">
           {t.services.items.map((item) => (
-            <li key={item.slug} data-reveal-item>
+            <li key={item.slug}>
               <SmartLink
                 href={item.href}
                 className="group/card flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-stone bg-white shadow-[var(--shadow-card)] transition-[transform,box-shadow,border-color] duration-500 ease-[var(--ease-out-expo)] can-hover:hover:-translate-y-1 can-hover:hover:border-gold/45 can-hover:hover:shadow-[var(--shadow-lift)]"
               >
-                <span data-reveal-img className="relative block aspect-[16/11] overflow-hidden">
-                  <span data-drift className="block size-full">
+                <span data-anim="img-reveal" className="relative block aspect-[16/11] overflow-hidden">
+                  <span data-parallax className="block size-full">
                     <Picture
                       pic={images.services[item.image]}
                       sizes="(min-width: 1320px) 300px, (min-width: 768px) 24vw, 46vw"

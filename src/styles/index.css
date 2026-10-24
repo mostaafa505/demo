@@ -239,6 +239,65 @@ html.lenis body {
   pointer-events: none;
 }
 
+/*
+ * Initial states for scroll and load animations. Only applied once the app has
+ * mounted (html.js-anim) and only when motion is welcome, so content is never
+ * hidden if the script fails or the visitor prefers reduced motion.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .js-anim [data-anim='fade-up'],
+  .js-anim [data-anim='stagger'] > *,
+  .js-anim [data-anim-frame],
+  .js-anim [data-anim-capsule],
+  .js-anim [data-anim-lead],
+  .js-anim [data-anim='section-head'] [data-ornament-mark],
+  .js-anim [data-header-row],
+  .js-anim [data-header-nav] > li,
+  .js-anim [data-hero-text],
+  .js-anim [data-hero-cta] > *,
+  .js-anim [data-hero-trust] {
+    opacity: 0;
+  }
+  .js-anim [data-anim='title'],
+  .js-anim [data-anim='section-head'] h2,
+  .js-anim [data-hero-title] {
+    visibility: hidden;
+  }
+  .js-anim [data-anim='img-reveal'] {
+    clip-path: inset(100% 0 0 0);
+  }
+  .js-anim [data-anim='line'],
+  .js-anim [data-anim='section-head'] [data-ornament-line],
+  .js-anim [data-hero-rule] {
+    transform: scaleX(0);
+  }
+}
+
+/* Gold-leaf sheen across primary buttons on hover — travels with the reading direction */
+@utility sheen {
+  overflow: hidden;
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(105deg, transparent 30%, rgb(255 250 235 / 0.55) 50%, transparent 70%);
+    transform: translateX(-120%);
+  }
+  [dir='rtl'] &::after {
+    transform: translateX(120%);
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    &:hover::after {
+      transform: translateX(120%);
+      transition: transform 0.9s var(--ease-out-quart);
+    }
+    [dir='rtl'] &:hover::after {
+      transform: translateX(-120%);
+    }
+  }
+}
+
 /* SplitText masks: room for Arabic ascenders/descenders inside the mask */
 .split-line-mask {
   padding-block: 0.12em;

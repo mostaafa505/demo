@@ -10,7 +10,7 @@ import { SmartLink } from '../components/ui/SmartLink'
 import { site } from '../config/site'
 import { useLang } from '../i18n/LanguageProvider'
 import { gsap, MOTION_OK, useGSAP } from '../motion/gsap'
-import { useReveal } from '../motion/useReveal'
+import { useAnim } from '../motion/useAnim'
 
 const METHOD_ICONS = [Building2, PhoneCall, Video]
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
@@ -43,7 +43,7 @@ export function Consultation() {
   const [errors, setErrors] = useState<Errors>({})
   const [tried, setTried] = useState(false)
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle')
-  useReveal(ref)
+  useAnim(ref)
 
   const validate = (v: Fields): Errors => {
     const e: Errors = {}
@@ -105,9 +105,9 @@ export function Consultation() {
     <section ref={ref} id="consultation" aria-labelledby="consultation-title" className="scroll-mt-24 bg-ivory pb-16 pt-6 lg:pb-20">
       {/* An ink card set into the ivory page, so it never sits flush against the dark footer */}
       <div className="container-site">
-        <div data-reveal="card" className="relative isolate overflow-hidden rounded-[1.5rem] bg-ink text-ivory shadow-[0_2.5rem_5rem_-2.5rem_rgb(10_15_26/0.55)]">
+        <div data-anim="card" className="relative isolate overflow-hidden rounded-[1.5rem] bg-ink text-ivory shadow-[0_2.5rem_5rem_-2.5rem_rgb(10_15_26/0.55)]">
           <div aria-hidden="true" className="absolute inset-0 -z-10">
-            <Picture pic={images.ctaBand} sizes="100vw" alt="" data-drift className="size-full object-cover object-[50%_60%] opacity-40" />
+            <Picture pic={images.ctaBand} sizes="100vw" alt="" data-parallax className="size-full object-cover object-[50%_60%] opacity-40" />
             <div className="absolute inset-0 from-ink via-ink/90 to-ink/50 ltr:bg-gradient-to-l rtl:bg-gradient-to-r" />
             <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/50" />
             <div className="khatam absolute inset-0 opacity-[0.05]" />
@@ -116,7 +116,7 @@ export function Consultation() {
 
           <div className="grid gap-10 px-5 py-10 sm:px-10 lg:grid-cols-12 lg:gap-12 lg:px-12 lg:py-14">
             {/* Invitation */}
-            <div className="lg:col-span-5" data-reveal="fade">
+            <div className="lg:col-span-5" data-anim="fade-up">
               <h2 id="consultation-title" className="font-display text-h2 text-ivory">
                 {t.consultation.title}
               </h2>
@@ -138,7 +138,7 @@ export function Consultation() {
             </div>
 
             {/* Form */}
-            <div className="lg:col-span-7" data-reveal="fade">
+            <div className="lg:col-span-7" data-anim="fade-up">
               <div className="rounded-[1.125rem] border border-gold/25 bg-ink-2/80 p-5 shadow-[0_30px_60px_-30px_rgb(0_0_0/0.8)] backdrop-blur-[0.125rem] sm:p-7">
                 {status === 'sent' ? (
                   <div ref={successRef} tabIndex={-1} role="status" className="flex min-h-[22rem] flex-col items-center justify-center text-center outline-none">

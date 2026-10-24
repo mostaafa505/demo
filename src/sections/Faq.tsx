@@ -4,7 +4,7 @@ import { Panel } from '../components/ui/Panel'
 import { SmartLink } from '../components/ui/SmartLink'
 import { useLang } from '../i18n/LanguageProvider'
 import { gsap, MOTION_OK, useGSAP } from '../motion/gsap'
-import { useReveal } from '../motion/useReveal'
+import { useAnim } from '../motion/useAnim'
 
 const chip = 'inline-flex h-8 items-center rounded-full border border-gold-deep/50 bg-white px-4 text-[0.8rem] font-semibold text-gold-ink transition-colors hover:bg-cream'
 
@@ -12,7 +12,7 @@ export function Faq() {
   const { t } = useLang()
   const ref = useRef<HTMLElement>(null)
   const [open, setOpen] = useState<number | null>(null)
-  useReveal(ref)
+  useAnim(ref)
   const items = t.faq.items
   const half = Math.ceil(items.length / 2)
 
@@ -31,7 +31,7 @@ export function Faq() {
         >
           <div className="grid gap-3 lg:grid-cols-2 lg:gap-4">
             {[items.slice(0, half), items.slice(half)].map((col, c) => (
-              <ul key={c} data-reveal-group className="space-y-3">
+              <ul key={c} data-anim="stagger" className="space-y-3">
                 {col.map((item, i) => {
                   const idx = c * half + i
                   return <FaqItem key={item.q} q={item.q} a={item.a} open={open === idx} onToggle={() => setOpen(open === idx ? null : idx)} />
@@ -62,7 +62,7 @@ function FaqItem({ q, a, open, onToggle }: { q: string; a: string; open: boolean
   )
 
   return (
-    <li data-reveal-item className={`rounded-[var(--radius-card)] border bg-white shadow-[var(--shadow-card)] transition-colors duration-300 ${open ? 'border-gold/45' : 'border-stone'}`}>
+    <li className={`rounded-[var(--radius-card)] border bg-white shadow-[var(--shadow-card)] transition-colors duration-300 ${open ? 'border-gold/45' : 'border-stone'}`}>
       <h3>
         <button type="button" id={`${id}-q`} aria-expanded={open} aria-controls={`${id}-a`} onClick={onToggle} className="flex w-full items-center gap-4 px-5 py-4 text-start">
           <span className="flex-1 text-[0.95rem] font-semibold leading-relaxed text-fg">{q}</span>

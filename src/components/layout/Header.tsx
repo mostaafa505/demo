@@ -6,6 +6,7 @@ import { site } from '../../config/site'
 import type { NavItem } from '../../content/types'
 import { useLang } from '../../i18n/LanguageProvider'
 import { gsap, ScrollTrigger, useGSAP } from '../../motion/gsap'
+import { EASE_IN, MQ, origins } from '../../motion/tokens'
 import { Logo, LogoMark } from '../brand/Logo'
 import { ServiceIcon } from '../brand/ServiceIcon'
 import { SocialIcon } from '../brand/SocialIcon'
@@ -19,7 +20,7 @@ import { MobileMenu } from './MobileMenu'
 /**
  * Two-row header from the brand-core reference: identity, search and actions on
  * top; navigation below. Fixed, with a spacer so nothing jumps when the top row
- * folds away on scroll.
+ * folds away after 80px; the navigation row stays pinned.
  */
 export function Header() {
   const { t } = useLang()
@@ -28,46 +29,36 @@ export function Header() {
   const [compact, setCompact] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [openIndex, setOpenIndex] = useState<number | null>(null)
-  const lockRef = useRef(false)
-  lockRef.current = menuOpen || openIndex !== null
+  useGSAP(
+    () => {
+      // Compact after 80px; back to full at the top.
+      const st = ScrollTrigger.create({ start: 80, end: 'max', onToggle: (self) => setCompact(self.isActive) })
+      // Reading progress: the gold hairline fills from the reading start (right in Arabic).
+      const progress = gsap.fromTo('[data-progress]', { scaleX: 0 }, { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: true } })
 
-  useGSAP(() => {
-    const header = headerRef.current!
-    let isCompact = false
-    let hidden = false
-    const show = (v: boolean) => {
-      if (hidden === !v) return
-      hidden = !v
-      gsap.to(header, { yPercent: v ? 0 : -100, duration: v ? 0.5 : 0.4, ease: v ? 'power3.out' : 'power2.in', overwrite: 'auto' })
-    }
-    const st = ScrollTrigger.create({
-      start: 0,
-      end: 'max',
-      onUpdate: (self) => {
-        const y = self.scroll()
-        const next = y > 140
-        if (next !== isCompact) {
-          isCompact = next
-          setCompact(next)
-        }
-        if (lockRef.current) return show(true)
-        if (y > 520 && self.direction === 1) show(false)
-        else if (self.direction === -1 || y < 200) show(true)
-      },
-    })
-    const progress = gsap.to('[data-progress]', { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: 0.4 } })
-    return () => {
-      st.kill()
-      progress.scrollTrigger?.kill()
-      progress.kill()
-    }
-  }, { scope: headerRef })
+      const mm = gsap.matchMedia()
+      mm.add(MQ.motion, () => {
+        const o = origins()
+        // Arrival: identity row settles from above, links follow in reading order.
+        gsap.fromTo('[data-header-row]', { autoAlpha: 0, y: -16 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: EASE_IN, clearProps: 'transform' })
+        gsap.fromTo('[data-header-nav] > li', { autoAlpha: 0, x: o.rtl ? 12 : -12 }, { autoAlpha: 1, x: 0, duration: 0.6, stagger: 0.05, delay: 0.15, ease: EASE_IN, clearProps: 'transform' })
+        // "Urgent" icon: one quiet pulse every six seconds; the button itself never moves.
+        gsap.timeline({ repeat: -1, repeatDelay: 6, delay: 3 }).to('[data-pulse]', { scale: 1.08, duration: 0.35, ease: 'power2.inOut' }).to('[data-pulse]', { scale: 1, duration: 0.45, ease: 'power2.inOut' })
+      })
+      return () => {
+        st.kill()
+        progress.scrollTrigger?.kill()
+        progress.kill()
+      }
+    },
+    { scope: headerRef },
+  )
 
   useGSAP(
     () => {
       const row = topRowRef.current
       if (!row) return
-      gsap.to(row, { height: compact ? 0 : 'auto', autoAlpha: compact ? 0 : 1, duration: 0.5, ease: 'power3.out', overwrite: 'auto' })
+      gsap.to(row, { height: compact ? 0 : 'auto', autoAlpha: compact ? 0 : 1, duration: 0.4, ease: 'power2.inOut', overwrite: 'auto' })
       if (compact) gsap.fromTo('[data-compact-only]', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, delay: 0.1 })
     },
     { dependencies: [compact], scope: headerRef },
@@ -79,16 +70,20 @@ export function Header() {
         {t.a11y.skipToContent}
       </a>
       <div aria-hidden="true" style={{ height: 'var(--header-h)' }} />
-      <header ref={headerRef} className="fixed inset-x-0 top-0 z-50 bg-ink text-ivory" onKeyDown={(e) => e.key === 'Escape' && setOpenIndex(null)}>
+      <header
+        ref={headerRef}
+        className={`fixed inset-x-0 top-0 z-50 text-ivory transition-[background-color,backdrop-filter] duration-400 ${compact ? 'bg-ink/90 backdrop-blur-md' : 'bg-ink'}`}
+        onKeyDown={(e) => e.key === 'Escape' && setOpenIndex(null)}
+      >
         <div aria-hidden="true" className="khatam pointer-events-none absolute inset-0 opacity-[0.05]" />
         <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold/45 to-transparent" />
         {/* Reading progress: a gold hairline that fills as the page scrolls */}
-        <div aria-hidden="true" data-progress className="pointer-events-none absolute inset-x-0 bottom-0 h-[0.125rem] origin-left scale-x-0 bg-gold-grad rtl:origin-right" />
+        <div aria-hidden="true" data-progress className="pointer-events-none absolute inset-x-0 bottom-0 h-[0.125rem] origin-left bg-gold-grad rtl:origin-right" style={{ transform: 'scaleX(0)' }} />
 
         {/* ---------- Desktop ---------- */}
         <div className="relative hidden xl:block">
           <div ref={topRowRef} className="overflow-hidden">
-            <div className="container-site flex h-[5.75rem] items-center gap-6">
+            <div data-header-row className="container-site flex h-[5.75rem] items-center gap-6">
               <SmartLink href="/" aria-label={site.brand.wordmark} className="shrink-0">
                 <Logo variant="light" className="h-[3.625rem]" />
               </SmartLink>
@@ -118,7 +113,7 @@ export function Header() {
               <DesktopNav items={t.nav} openIndex={openIndex} setOpenIndex={setOpenIndex} />
               <div className="ms-auto flex items-center gap-3">
                 <ButtonLink href={site.phones.emergency.href} variant="urgent" size="sm">
-                  <Siren className="size-4" strokeWidth={1.6} aria-hidden="true" />
+                  <Siren data-pulse className="size-4" strokeWidth={1.6} aria-hidden="true" />
                   {t.header.emergency}
                 </ButtonLink>
                 {compact && (
@@ -136,7 +131,7 @@ export function Header() {
 
         {/* ---------- Mobile / tablet ---------- */}
         <div className="relative xl:hidden">
-          <div className="container-site flex h-[4.5rem] items-center gap-1.5 xs:gap-2 sm:gap-3">
+          <div data-header-row className="container-site flex h-[4.5rem] items-center gap-1.5 xs:gap-2 sm:gap-3">
             <SmartLink href="/" aria-label={site.brand.wordmark} className="me-auto min-w-0 shrink">
               <Logo variant="mobile" className="h-9 max-[379px]:h-[1.875rem] sm:h-10" />
             </SmartLink>
@@ -247,7 +242,7 @@ function DesktopNav({ items, openIndex, setOpenIndex }: { items: NavItem[]; open
 
   return (
     <nav ref={navRef} aria-label={t.a11y.mainNav} onPointerLeave={scheduleClose} onPointerEnter={() => window.clearTimeout(closeTimer.current)}>
-      <ul className="flex h-14 items-center">
+      <ul data-header-nav className="flex h-14 items-center">
         {items.map((item, i) => {
           const hasMenu = !!item.children?.length
           const open = openIndex === i
@@ -289,7 +284,7 @@ function NavUnderline({ active }: { active: boolean }) {
   return (
     <span
       aria-hidden="true"
-      className={`absolute inset-x-3 bottom-2.5 h-px bg-gold-grad transition-transform duration-500 ease-[var(--ease-out-expo)] ltr:origin-left rtl:origin-right 2xl:inset-x-4 ${active ? 'scale-x-100' : 'scale-x-0 group-hover/nav:scale-x-100'}`}
+      className={`absolute inset-x-3 bottom-2.5 h-px bg-gold-grad transition-transform duration-300 ease-[var(--ease-out-quart)] ltr:origin-left rtl:origin-right 2xl:inset-x-4 ${active ? 'scale-x-100' : 'scale-x-0 group-hover/nav:scale-x-100'}`}
     />
   )
 }

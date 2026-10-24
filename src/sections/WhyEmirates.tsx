@@ -7,7 +7,7 @@ import { Panel } from '../components/ui/Panel'
 import { Picture } from '../components/ui/Picture'
 import { SmartLink } from '../components/ui/SmartLink'
 import { useLang } from '../i18n/LanguageProvider'
-import { useReveal } from '../motion/useReveal'
+import { useAnim } from '../motion/useAnim'
 
 const PILLAR_ICONS = [Award, FileCheck2, ShieldCheck, Globe2]
 
@@ -15,17 +15,17 @@ const PILLAR_ICONS = [Award, FileCheck2, ShieldCheck, Globe2]
 export function WhyEmirates() {
   const { t } = useLang()
   const ref = useRef<HTMLElement>(null)
-  useReveal(ref)
+  useAnim(ref)
 
   return (
     <section ref={ref} className="bg-ivory pb-16 pt-6 lg:pb-20">
       <div className="container-site grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-6 xl:gap-8">
         <Panel id="why-title" title={t.why.title} lead={t.why.lead}>
-          <ul data-reveal-group className="grid gap-3 sm:grid-cols-2">
+          <ul data-anim="stagger" className="grid gap-3 sm:grid-cols-2">
             {t.why.pillars.map((p, i) => {
               const Icon = PILLAR_ICONS[i]
               return (
-                <li key={p.title} data-reveal-item className="flex items-start gap-3.5 rounded-[var(--radius-card)] border border-stone bg-white p-4 shadow-[var(--shadow-card)]">
+                <li key={p.title} className="flex items-start gap-3.5 rounded-[var(--radius-card)] border border-stone bg-white p-4 shadow-[var(--shadow-card)]">
                   <span className="grid size-11 shrink-0 place-items-center rounded-[0.75rem] bg-cream text-gold-deep ring-1 ring-inset ring-gold/20">
                     <Icon className="size-[1.375rem]" strokeWidth={1.4} aria-hidden="true" />
                   </span>
@@ -37,9 +37,9 @@ export function WhyEmirates() {
               )
             })}
           </ul>
-          <dl data-reveal-group className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <dl data-anim="stagger" className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {t.why.stats.map((s) => (
-              <div key={s.label} data-reveal-item className="flex flex-col items-center rounded-[var(--radius-card)] border border-stone bg-white px-3 py-4 text-center">
+              <div key={s.label} className="flex flex-col items-center rounded-[var(--radius-card)] border border-stone bg-white px-3 py-4 text-center">
                 <dd className="order-1 font-[family-name:var(--font-latin)] text-[1.7rem] font-bold leading-tight text-gold-ink">
                   <Counter to={s.value} prefix={s.prefix} suffix={s.suffix} separator={s.separator ?? ''} />
                 </dd>
@@ -50,12 +50,12 @@ export function WhyEmirates() {
         </Panel>
 
         <Panel id="emirates-title" title={t.emirates.title} lead={t.emirates.lead}>
-          <ul data-reveal-group className="grid grid-cols-3 gap-2.5 sm:gap-3">
+          <ul data-anim="stagger" className="grid grid-cols-3 gap-2.5 sm:gap-3">
             {t.emirates.items.map((city) => (
-              <li key={city.slug} data-reveal-item>
+              <li key={city.slug}>
                 <SmartLink href={city.href} className="group/city flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-stone bg-white shadow-[var(--shadow-card)] transition-[border-color,box-shadow] duration-500 hover:border-gold/45 hover:shadow-[var(--shadow-lift)]">
-                  <span data-reveal-img className="relative block aspect-[4/3.4] overflow-hidden">
-                    <span data-drift className="block size-full"><Picture pic={images.cities[city.slug]} sizes="(min-width: 1024px) 200px, 31vw" alt={city.imageAlt} className="size-full object-cover transition-[scale] duration-[1.1s] ease-[var(--ease-out-expo)] group-hover/city:scale-[1.07]" /></span>
+                  <span data-anim="img-reveal" className="relative block aspect-[4/3.4] overflow-hidden">
+                    <span data-parallax className="block size-full"><Picture pic={images.cities[city.slug]} sizes="(min-width: 1024px) 200px, 31vw" alt={city.imageAlt} className="size-full object-cover transition-[scale] duration-[1.1s] ease-[var(--ease-out-expo)] group-hover/city:scale-[1.07]" /></span>
                   </span>
                   <span className="relative flex flex-1 flex-col items-center px-2 pb-3 pt-6 text-center sm:px-3 sm:pb-4">
                     <span className="absolute -top-4 left-1/2 inline-flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full border border-stone bg-white px-3.5 py-1 font-title text-[0.9rem] text-fg shadow-[var(--shadow-card)] sm:text-[1rem]">

@@ -4,7 +4,7 @@ import SpotlightCard from '../components/reactbits/SpotlightCard'
 import { ButtonLink } from '../components/ui/Button'
 import { Panel } from '../components/ui/Panel'
 import { useLang } from '../i18n/LanguageProvider'
-import { useReveal } from '../motion/useReveal'
+import { useAnim } from '../motion/useAnim'
 
 const card = {
   '--spotlight-card-surface': '#FFFFFF',
@@ -36,15 +36,15 @@ function Tool({ icon, title, text, children, badge, muted, extra }: { icon: Reac
 export function QuickTools() {
   const { t } = useLang()
   const ref = useRef<HTMLElement>(null)
-  useReveal(ref)
+  useAnim(ref)
   const tools = t.tools
 
   return (
     <section ref={ref} id="tools" className="bg-ivory pb-16 pt-6 lg:pb-20">
       <div className="container-site">
         <Panel id="tools-title" title={tools.title} lead={tools.lead}>
-          <ul data-reveal-group className="grid gap-4 md:grid-cols-3 md:gap-5">
-            <li data-reveal-item>
+          <ul data-anim="stagger" className="grid gap-4 md:grid-cols-3 md:gap-5">
+            <li>
               <Tool icon={<CalendarCheck strokeWidth={1.4} aria-hidden="true" />} title={tools.booking.title}
                 text={tools.booking.text}
                 extra={
@@ -62,14 +62,14 @@ export function QuickTools() {
                 </ButtonLink>
               </Tool>
             </li>
-            <li data-reveal-item id="assess" className="scroll-mt-40">
+            <li id="assess" className="scroll-mt-40">
               <Tool icon={<ClipboardCheck strokeWidth={1.4} aria-hidden="true" />} title={tools.assess.title} text={tools.assess.text}>
                 <ButtonLink href="/assessment" variant="outline-dark" size="sm" className="w-full max-w-60">
                   {tools.assess.cta}
                 </ButtonLink>
               </Tool>
             </li>
-            <li data-reveal-item>
+            <li>
               <Tool icon={<LockKeyhole strokeWidth={1.4} aria-hidden="true" />} title={tools.portal.title} text={tools.portal.text} badge={tools.portal.badge} muted>
                 <span aria-disabled="true" className="inline-flex h-9 w-full max-w-60 items-center justify-center rounded-[var(--radius-btn)] border border-dashed border-gold/40 text-[0.82rem] font-semibold text-muted">
                   {tools.portal.cta}

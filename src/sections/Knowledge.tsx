@@ -7,7 +7,7 @@ import { Picture } from '../components/ui/Picture'
 import { SmartLink } from '../components/ui/SmartLink'
 import type { Content } from '../content/types'
 import { useLang } from '../i18n/LanguageProvider'
-import { useReveal } from '../motion/useReveal'
+import { useAnim } from '../motion/useAnim'
 
 type CategoryKey = Content['knowledge']['categories'][number]['key']
 
@@ -20,7 +20,7 @@ const chip = 'inline-flex h-8 items-center gap-1.5 rounded-full border border-go
 export function Knowledge() {
   const { t, lang } = useLang()
   const ref = useRef<HTMLElement>(null)
-  useReveal(ref)
+  useAnim(ref)
   const fmt = new Intl.DateTimeFormat(lang === 'ar' ? 'ar-AE-u-nu-latn' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
 
   return (
@@ -38,15 +38,15 @@ export function Knowledge() {
         >
           {/* Desktop: formats beside the library still, as in the client's layout */}
           <div className="hidden gap-3 lg:grid lg:grid-cols-[1.25fr_repeat(5,1fr)]">
-            <div data-reveal="fade" className="relative overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-card)]">
-              <Picture pic={images.knowledgeGavel} sizes="(min-width: 1440px) 18vw, 260px" alt="" data-drift className="absolute inset-0 size-full object-cover object-[38%_60%]" />
+            <div data-anim="fade-up" className="relative overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-card)]">
+              <Picture pic={images.knowledgeGavel} sizes="(min-width: 1440px) 18vw, 260px" alt="" data-parallax className="absolute inset-0 size-full object-cover object-[38%_60%]" />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/30 to-transparent" />
             </div>
-            <ul data-reveal-group className="contents">
+            <ul data-anim="stagger" className="contents">
               {t.knowledge.categories.map((c) => {
                 const Icon = CATEGORY_ICONS[c.key]
                 return (
-                  <li key={c.key} data-reveal-item>
+                  <li key={c.key}>
                     <SmartLink href={c.href} className="group/cat flex h-full flex-col rounded-[var(--radius-card)] border border-stone bg-white p-4 shadow-[var(--shadow-card)] transition-[border-color,box-shadow] duration-500 hover:border-gold/45 hover:shadow-[var(--shadow-lift)]">
                       <span className="grid size-11 place-items-center rounded-[0.75rem] bg-cream text-gold-deep ring-1 ring-inset ring-gold/20">
                         <Icon className="size-5" strokeWidth={1.5} aria-hidden="true" />
@@ -66,11 +66,11 @@ export function Knowledge() {
           </div>
 
           {/* Mobile & tablet: latest posts, as in the client's mobile layout */}
-          <ul data-reveal-group className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 sm:-mx-6 sm:px-6 lg:hidden">
+          <ul data-anim="stagger" className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 sm:-mx-6 sm:px-6 lg:hidden">
             {t.knowledge.articles.map((a) => (
-              <li key={a.href} data-reveal-item className="w-[72%] shrink-0 snap-center sm:w-[44%]">
+              <li key={a.href} className="w-[72%] shrink-0 snap-center sm:w-[44%]">
                 <SmartLink href={a.href} className="flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-stone bg-white shadow-[var(--shadow-card)]">
-                  <span data-reveal-img className="relative block aspect-[16/10] overflow-hidden">
+                  <span data-anim="img-reveal" className="relative block aspect-[16/10] overflow-hidden">
                     <Picture pic={ARTICLE_IMAGES[a.image]} sizes="72vw" alt="" className="size-full object-cover" />
                     <span className="absolute bottom-2 end-2 rounded-full bg-ink/80 px-2.5 py-0.5 text-[0.72rem] font-semibold text-gold-light backdrop-blur-sm">{a.category}</span>
                     {a.image === 'video' && (

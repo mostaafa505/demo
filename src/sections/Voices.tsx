@@ -4,7 +4,7 @@ import { images } from '../assets/images'
 import { Panel } from '../components/ui/Panel'
 import { SmartLink } from '../components/ui/SmartLink'
 import { useLang } from '../i18n/LanguageProvider'
-import { useReveal } from '../motion/useReveal'
+import { useAnim } from '../motion/useAnim'
 
 const chip = 'inline-flex h-8 items-center rounded-full border border-gold-deep/50 bg-white px-4 text-[0.8rem] font-semibold text-gold-ink transition-colors hover:bg-cream'
 
@@ -12,7 +12,7 @@ const chip = 'inline-flex h-8 items-center rounded-full border border-gold-deep/
 export function Voices() {
   const { t } = useLang()
   const ref = useRef<HTMLElement>(null)
-  useReveal(ref)
+  useAnim(ref)
   const stories = t.testimonials.items.slice(0, 2)
 
   return (
@@ -28,9 +28,9 @@ export function Voices() {
             </SmartLink>
           }
         >
-          <ul data-reveal-group className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0">
+          <ul data-anim="stagger" className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0">
             {stories.map((s) => (
-              <li key={s.initials} data-reveal-item className="w-[85%] shrink-0 snap-center sm:w-auto">
+              <li key={s.initials} className="w-[85%] shrink-0 snap-center sm:w-auto">
                 <figure className="flex h-full flex-col rounded-[var(--radius-card)] border border-stone bg-white p-5 shadow-[var(--shadow-card)]">
                   <Quote className="size-6 fill-gold/15 text-gold rtl:-scale-x-100" strokeWidth={1.2} aria-hidden="true" />
                   <blockquote className="mt-3 flex-1 text-[0.92rem] leading-relaxed text-fg/85">{s.quote}</blockquote>
@@ -55,9 +55,9 @@ export function Voices() {
         </Panel>
 
         <Panel id="lawyers-title" title={t.lawyers.title} lead={t.lawyers.lead}>
-          <ul data-reveal-group className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0">
+          <ul data-anim="stagger" className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0">
             {t.lawyers.items.map((l, i) => (
-              <li key={l.slug} data-reveal-item className="w-[62%] shrink-0 snap-center sm:w-auto">
+              <li key={l.slug} className="w-[62%] shrink-0 snap-center sm:w-auto">
                 <SmartLink href={l.href} className="group/lawyer flex h-full flex-col items-center rounded-[var(--radius-card)] border border-stone bg-white px-3 pb-4 pt-5 text-center shadow-[var(--shadow-card)] transition-[border-color,box-shadow] duration-500 hover:border-gold/45 hover:shadow-[var(--shadow-lift)]">
                   <span className={`relative block overflow-hidden rounded-full ring-2 ring-gold/50 ring-offset-[0.1875rem] ring-offset-white ${i === 0 ? 'size-24' : 'size-[5.25rem]'}`}>
                     <img src={images.lawyers[l.slug]} alt={l.imageAlt} loading="lazy" className="size-full scale-[1.35] object-cover object-[50%_30%] transition-transform duration-700 group-hover/lawyer:scale-[1.42]" />

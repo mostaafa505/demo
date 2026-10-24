@@ -1,3 +1,4 @@
+import { useLayoutEffect } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import { Footer } from './components/layout/Footer'
 import { Header } from './components/layout/Header'
@@ -10,7 +11,14 @@ export function App() {
   const { lang } = useLang()
   const { pathname } = useLocation()
 
-  // Keying by language remounts every section, so SplitText and ScrollTrigger
+  // Animation start states (styles/index.css) apply only once the app is running; the inline
+  // script in index.html adds the class before first paint and lifts it if the app never starts.
+  useLayoutEffect(() => {
+    ;(window as Window & { __appReady?: boolean }).__appReady = true
+    document.documentElement.classList.add('js-anim')
+  }, [])
+
+  // Keying by language remounts every section, so split headings and ScrollTrigger
   // re-measure for the new direction and typeface.
   return (
     <div key={lang}>
