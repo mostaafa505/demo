@@ -140,7 +140,7 @@ export interface Content {
     viewAll: string
     readMore: string
     latest: string
-    categories: { key: 'articles' | 'videos' | 'podcast' | 'webinars' | 'faq'; title: string; text: string; href: string }[]
+    categories: { key: 'articles' | 'videos' | 'podcast' | 'webinars' | 'faq'; title: string; text: string; cta: string; href: string }[]
     articles: {
       category: string
       title: string

@@ -1,27 +1,23 @@
 import { Consultation } from '../sections/Consultation'
-import { Emirates } from '../sections/Emirates'
 import { Faq } from '../sections/Faq'
 import { Hero } from '../sections/Hero'
 import { Knowledge } from '../sections/Knowledge'
-import { Lawyers } from '../sections/Lawyers'
 import { QuickTools } from '../sections/QuickTools'
 import { Services } from '../sections/Services'
-import { Testimonials } from '../sections/Testimonials'
-import { WhyUs } from '../sections/WhyUs'
+import { Voices } from '../sections/Voices'
+import { WhyEmirates } from '../sections/WhyEmirates'
 
 export function Home() {
   return (
-    <>
+    <div className="paper bg-ivory">
       <Hero />
       <Services />
       <QuickTools />
-      <WhyUs />
-      <Emirates />
-      <Lawyers />
-      <Testimonials />
+      <WhyEmirates />
+      <Voices />
       <Knowledge />
       <Faq />
       <Consultation />
-    </>
+    </div>
   )
 }

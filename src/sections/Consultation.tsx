@@ -1,15 +1,16 @@
-import { Building2, Check, ChevronDown, Clock, LoaderCircle, Mail, MapPin, Phone, PhoneCall, Video } from 'lucide-react'
-import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from 'react'
+import { Building2, Check, ChevronDown, LoaderCircle, Mail, Phone, PhoneCall, Video } from 'lucide-react'
+import { useId, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { images } from '../assets/images'
-import { Button } from '../components/ui/Button'
+import { SocialIcon } from '../components/brand/SocialIcon'
 import { ForwardArrow } from '../components/ui/Arrow'
-import { SectionHeading } from '../components/ui/SectionHeading'
+import { Button } from '../components/ui/Button'
+import { Ornament } from '../components/ui/Ornament'
+import { Picture } from '../components/ui/Picture'
 import { SmartLink } from '../components/ui/SmartLink'
 import { site } from '../config/site'
 import { useLang } from '../i18n/LanguageProvider'
 import { gsap, MOTION_OK, useGSAP } from '../motion/gsap'
 import { useReveal } from '../motion/useReveal'
-import { METHOD_EVENT } from './QuickTools'
 
 const METHOD_ICONS = [Building2, PhoneCall, Video]
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
@@ -17,8 +18,9 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 type Fields = { name: string; email: string; type: string; method: number | null; message: string; consent: boolean }
 type Errors = Partial<Record<'name' | 'email' | 'type' | 'method' | 'consent', string>>
 
+/** The client's dark booking band: invitation and meeting methods on one side, the form on the other. */
 export function Consultation() {
-  const { t, lang } = useLang()
+  const { t } = useLang()
   const f = t.consultation.form
   const ref = useRef<HTMLElement>(null)
   const successRef = useRef<HTMLDivElement>(null)
@@ -28,13 +30,6 @@ export function Consultation() {
   const [tried, setTried] = useState(false)
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle')
   useReveal(ref)
-
-  // The quick-tools booking card can preselect the meeting method.
-  useEffect(() => {
-    const onPick = (e: Event) => setFields((s) => ({ ...s, method: (e as CustomEvent<number>).detail }))
-    window.addEventListener(METHOD_EVENT, onPick)
-    return () => window.removeEventListener(METHOD_EVENT, onPick)
-  }, [])
 
   const validate = (v: Fields): Errors => {
     const e: Errors = {}
@@ -57,14 +52,11 @@ export function Consultation() {
     setTried(true)
     const errs = validate(fields)
     setErrors(errs)
-    const firstInvalid = Object.keys(errs)[0]
-    if (firstInvalid) {
-      document.getElementById(`${uid}-${firstInvalid}`)?.focus()
-      return
-    }
+    const first = Object.keys(errs)[0]
+    if (first) return document.getElementById(`${uid}-${first}`)?.focus()
     setStatus('sending')
     // No backend in phase 1: simulate the request.
-    window.setTimeout(() => setStatus('sent'), 1100)
+    window.setTimeout(() => setStatus('sent'), 1000)
   }
 
   useGSAP(
@@ -72,11 +64,11 @@ export function Consultation() {
       if (status !== 'sent' || !successRef.current) return
       successRef.current.focus()
       if (!window.matchMedia(MOTION_OK).matches) return
-      const tl = gsap.timeline()
-      tl.from(successRef.current, { autoAlpha: 0, y: 12, duration: 0.5 })
-        .fromTo('[data-check-circle]', { strokeDashoffset: 176 }, { strokeDashoffset: 0, duration: 0.9, ease: 'power2.inOut' }, 0.1)
-        .fromTo('[data-check-mark]', { strokeDashoffset: 40 }, { strokeDashoffset: 0, duration: 0.45, ease: 'power2.out' }, 0.75)
-        .from('[data-success-copy] > *', { autoAlpha: 0, y: 10, stagger: 0.08, duration: 0.5 }, 0.8)
+      gsap
+        .timeline()
+        .from(successRef.current, { autoAlpha: 0, y: 10, duration: 0.45 })
+        .fromTo('[data-check-circle]', { strokeDashoffset: 176 }, { strokeDashoffset: 0, duration: 0.8, ease: 'power2.inOut' }, 0.1)
+        .fromTo('[data-check-mark]', { strokeDashoffset: 40 }, { strokeDashoffset: 0, duration: 0.4, ease: 'power2.out' }, 0.7)
     },
     { dependencies: [status], scope: ref },
   )
@@ -89,106 +81,91 @@ export function Consultation() {
   }
 
   return (
-    <section ref={ref} id="consultation" aria-labelledby="consultation-title" className="scroll-mt-20 bg-ivory py-20 lg:py-32">
-      <div className="container-site">
-        <div className="grid overflow-hidden rounded-[var(--radius-card)] border border-gold/20 bg-white shadow-[var(--shadow-lift)] lg:grid-cols-12">
-          {/* Context panel */}
-          <div className="relative isolate overflow-hidden bg-ink p-7 text-ivory sm:p-10 lg:col-span-5 lg:p-12">
-            <div aria-hidden="true" className="absolute inset-x-0 bottom-0 -z-10 h-1/2 overflow-hidden">
-              <img data-parallax="8" src={images.ctaSkyline} alt="" loading="lazy" className="absolute inset-x-0 -bottom-[14%] h-[135%] w-full object-cover opacity-35" />
-              <div className="absolute inset-0 bg-gradient-to-b from-ink via-ink/70 to-ink/30" />
-            </div>
-            <SectionHeading id="consultation-title" tone="dark" layout="stacked" eyebrow={t.consultation.eyebrow} title={t.consultation.title} lead={t.consultation.lead} />
-            <ul data-reveal-group className="mt-9 space-y-3.5">
-              {t.consultation.reassurance.map((r) => (
-                <li key={r} data-reveal-item className="flex items-start gap-3 text-[0.93rem] text-ivory/80">
-                  <Check className="mt-1 size-4 shrink-0 text-gold" strokeWidth={2} aria-hidden="true" />
-                  {r}
-                </li>
-              ))}
-            </ul>
-            <dl className="mt-10 grid gap-6 border-t border-gold/15 pt-8 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-              <Info icon={<Phone className="size-[18px]" strokeWidth={1.5} />} title={t.consultation.callTitle}>
-                <a href={site.phones.office.href} dir="ltr" className="hover:text-gold-light">
-                  {site.phones.office.display}
-                </a>
-              </Info>
-              <Info icon={<Mail className="size-[18px]" strokeWidth={1.5} />} title={t.consultation.emailTitle}>
-                <a href={`mailto:${site.email}`} className="break-all hover:text-gold-light">
-                  {site.email}
-                </a>
-              </Info>
-              <Info icon={<MapPin className="size-[18px]" strokeWidth={1.5} />} title={t.consultation.officeTitle}>
-                {site.address.short[lang]}
-              </Info>
-              <Info icon={<Clock className="size-[18px]" strokeWidth={1.5} />} title={t.consultation.hoursTitle}>
-                {site.hours[lang].days}
-                <br />
-                {site.hours[lang].time}
-              </Info>
-            </dl>
-          </div>
+    <section ref={ref} id="consultation" aria-labelledby="consultation-title" className="relative isolate scroll-mt-24 overflow-hidden bg-ink text-ivory">
+      <div aria-hidden="true" className="absolute inset-0 -z-10">
+        <Picture pic={images.ctaBand} sizes="100vw" alt="" className="size-full object-cover object-[50%_60%] opacity-45" />
+        <div className="absolute inset-0 from-ink via-ink/88 to-ink/55 ltr:bg-gradient-to-l rtl:bg-gradient-to-r" />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/60" />
+        <div className="khatam absolute inset-0 opacity-[0.06]" />
+      </div>
+      <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
 
-          {/* Form */}
-          <div className="p-6 sm:p-10 lg:col-span-7 lg:p-12">
+      <div className="container-site grid gap-10 py-14 lg:grid-cols-12 lg:gap-12 lg:py-16">
+        {/* Invitation */}
+        <div className="lg:col-span-5" data-reveal="fade">
+          <h2 id="consultation-title" className="font-display text-h2 text-ivory">
+            {t.consultation.title}
+          </h2>
+          <Ornament className="mt-3 !justify-start" tone="dark" />
+          <p className="mt-4 max-w-[46ch] text-ivory/72">{t.consultation.lead}</p>
+          <ul className="mt-7 space-y-2.5">
+            {t.consultation.reassurance.map((r) => (
+              <li key={r} className="flex items-start gap-3 text-[0.92rem] text-ivory/80">
+                <Check className="mt-1 size-4 shrink-0 text-gold" strokeWidth={2} aria-hidden="true" />
+                {r}
+              </li>
+            ))}
+          </ul>
+          <ul className="mt-8 flex flex-wrap gap-x-7 gap-y-3 border-t border-gold/20 pt-6 text-[0.86rem]">
+            <ContactItem icon={<Phone className="size-[18px]" strokeWidth={1.5} />} href={site.phones.office.href} label={t.consultation.callTitle} value={site.phones.office.display} ltr />
+            <ContactItem icon={<SocialIcon name="whatsapp" className="size-[18px]" />} href={site.whatsapp.href} label={t.footer.contact.whatsapp} value={site.whatsapp.display} ltr external />
+            <ContactItem icon={<Mail className="size-[18px]" strokeWidth={1.5} />} href={`mailto:${site.email}`} label={t.consultation.emailTitle} value={site.email} />
+          </ul>
+        </div>
+
+        {/* Form */}
+        <div className="lg:col-span-7" data-reveal="fade">
+          <div className="rounded-[18px] border border-gold/25 bg-ink-2/80 p-5 shadow-[0_30px_60px_-30px_rgb(0_0_0/0.8)] backdrop-blur-[2px] sm:p-7">
             {status === 'sent' ? (
-              <div ref={successRef} tabIndex={-1} className="flex h-full flex-col items-start justify-center py-10 outline-none" role="status">
-                <svg viewBox="0 0 64 64" className="size-16 text-gold-deep" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+              <div ref={successRef} tabIndex={-1} role="status" className="flex min-h-[22rem] flex-col items-center justify-center text-center outline-none">
+                <svg viewBox="0 0 64 64" className="size-16 text-gold" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
                   <circle data-check-circle cx="32" cy="32" r="28" strokeDasharray="176" />
                   <path data-check-mark d="M21 33l7 7 15-16" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="40" />
                 </svg>
-                <div data-success-copy>
-                  <h3 className="font-heading text-h3 mt-6 !text-[1.9rem] text-fg">{f.success.title}</h3>
-                  <p className="mt-3 max-w-[46ch] text-muted">{f.success.text}</p>
-                  <Button type="button" variant="outline-dark" size="md" className="mt-8" onClick={reset}>
-                    {f.success.again}
-                  </Button>
-                </div>
+                <h3 className="font-display mt-5 text-[1.6rem] text-ivory">{f.success.title}</h3>
+                <p className="mt-2 max-w-[44ch] text-ivory/70">{f.success.text}</p>
+                <Button type="button" variant="outline-gold" size="md" className="mt-7" onClick={reset}>
+                  {f.success.again}
+                </Button>
               </div>
             ) : (
-              <form noValidate onSubmit={onSubmit} aria-labelledby="consultation-title" data-reveal="fade">
-                <div className="grid gap-5 sm:grid-cols-2">
+              <form noValidate onSubmit={onSubmit} aria-labelledby="consultation-title">
+                <fieldset aria-describedby={errors.method ? `${uid}-method-err` : undefined}>
+                  <legend className="text-[0.85rem] font-semibold text-ivory/85">{f.method}</legend>
+                  <div className="mt-2.5 grid grid-cols-3 gap-2.5">
+                    {f.methods.map((m, i) => {
+                      const Icon = METHOD_ICONS[i]
+                      const checked = fields.method === i
+                      return (
+                        <label
+                          key={m}
+                          className={`relative flex cursor-pointer items-center justify-center gap-2 rounded-full border px-3 py-2.5 text-[0.86rem] font-medium transition-colors duration-300 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-gold ${
+                            checked ? 'border-gold bg-gold-grad text-ink' : errors.method ? 'border-urgent/70 text-ivory/80' : 'border-ivory/18 text-ivory/80 hover:border-gold/60'
+                          }`}
+                        >
+                          <input id={i === 0 ? `${uid}-method` : undefined} type="radio" name={`${uid}-method`} className="sr-only" checked={checked} onChange={() => update('method', i)} />
+                          <Icon className="size-[18px]" strokeWidth={1.6} aria-hidden="true" />
+                          {m}
+                        </label>
+                      )
+                    })}
+                  </div>
+                  {errors.method && <ErrorText id={`${uid}-method-err`}>{errors.method}</ErrorText>}
+                </fieldset>
+
+                <div className="mt-5 grid gap-4 sm:grid-cols-2">
                   <Field id={`${uid}-name`} label={f.name} error={errors.name}>
-                    <input
-                      id={`${uid}-name`}
-                      type="text"
-                      autoComplete="name"
-                      placeholder={f.namePlaceholder}
-                      value={fields.name}
-                      onChange={(e) => update('name', e.target.value)}
-                      aria-invalid={!!errors.name}
-                      aria-describedby={errors.name ? `${uid}-name-err` : undefined}
-                      className={inputClass(!!errors.name)}
-                    />
+                    <input id={`${uid}-name`} type="text" autoComplete="name" placeholder={f.namePlaceholder} value={fields.name} onChange={(e) => update('name', e.target.value)} aria-invalid={!!errors.name} aria-describedby={errors.name ? `${uid}-name-err` : undefined} className={inputClass(!!errors.name)} />
                   </Field>
                   <Field id={`${uid}-email`} label={f.email} error={errors.email}>
-                    <input
-                      id={`${uid}-email`}
-                      type="email"
-                      dir="ltr"
-                      autoComplete="email"
-                      inputMode="email"
-                      placeholder={f.emailPlaceholder}
-                      value={fields.email}
-                      onChange={(e) => update('email', e.target.value)}
-                      aria-invalid={!!errors.email}
-                      aria-describedby={errors.email ? `${uid}-email-err` : undefined}
-                      className={`${inputClass(!!errors.email)} rtl:text-right`}
-                    />
+                    <input id={`${uid}-email`} type="email" dir="ltr" autoComplete="email" inputMode="email" placeholder={f.emailPlaceholder} value={fields.email} onChange={(e) => update('email', e.target.value)} aria-invalid={!!errors.email} aria-describedby={errors.email ? `${uid}-email-err` : undefined} className={`${inputClass(!!errors.email)} rtl:text-right`} />
                   </Field>
                 </div>
 
-                <div className="mt-5">
+                <div className="mt-4">
                   <Field id={`${uid}-type`} label={f.type} error={errors.type}>
                     <div className="relative">
-                      <select
-                        id={`${uid}-type`}
-                        value={fields.type}
-                        onChange={(e) => update('type', e.target.value)}
-                        aria-invalid={!!errors.type}
-                        aria-describedby={errors.type ? `${uid}-type-err` : undefined}
-                        className={`${inputClass(!!errors.type)} appearance-none pe-11 ${fields.type ? '' : 'text-muted/80'}`}
-                      >
+                      <select id={`${uid}-type`} value={fields.type} onChange={(e) => update('type', e.target.value)} aria-invalid={!!errors.type} aria-describedby={errors.type ? `${uid}-type-err` : undefined} className={`${inputClass(!!errors.type)} appearance-none pe-11 ${fields.type ? '' : 'text-muted'}`}>
                         <option value="" disabled>
                           {f.typePlaceholder}
                         </option>
@@ -198,90 +175,38 @@ export function Consultation() {
                           </option>
                         ))}
                       </select>
-                      <ChevronDown className="pointer-events-none absolute end-4 top-1/2 size-4 -translate-y-1/2 text-gold-deep" strokeWidth={1.5} aria-hidden="true" />
+                      <ChevronDown className="pointer-events-none absolute end-4 top-1/2 size-4 -translate-y-1/2 text-gold-deep" strokeWidth={1.6} aria-hidden="true" />
                     </div>
                   </Field>
                 </div>
 
-                <fieldset className="mt-6" aria-describedby={errors.method ? `${uid}-method-err` : undefined}>
-                  <legend className="text-[0.88rem] font-semibold text-fg">{f.method}</legend>
-                  <div className="mt-2.5 grid grid-cols-3 gap-2.5">
-                    {f.methods.map((m, i) => {
-                      const Icon = METHOD_ICONS[i]
-                      const checked = fields.method === i
-                      return (
-                        <label
-                          key={m}
-                          className={`relative flex cursor-pointer flex-col items-center gap-2 rounded-[var(--radius-btn)] border px-2 py-4 text-[0.88rem] font-medium transition-colors duration-300 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-gold ${
-                            checked ? 'border-gold bg-gold/10 text-fg' : errors.method ? 'border-urgent/50 text-muted' : 'border-fg/12 text-muted hover:border-gold/50'
-                          }`}
-                        >
-                          <input
-                            id={i === 0 ? `${uid}-method` : undefined}
-                            type="radio"
-                            name={`${uid}-method`}
-                            className="sr-only"
-                            checked={checked}
-                            onChange={() => update('method', i)}
-                          />
-                          <Icon className={`size-5 ${checked ? 'text-gold-deep' : ''}`} strokeWidth={1.5} aria-hidden="true" />
-                          {m}
-                          {checked && <Check className="absolute end-2 top-2 size-3.5 text-gold-deep" strokeWidth={2} aria-hidden="true" />}
-                        </label>
-                      )
-                    })}
-                  </div>
-                  {errors.method && <ErrorText id={`${uid}-method-err`}>{errors.method}</ErrorText>}
-                </fieldset>
-
-                <div className="mt-6">
+                <div className="mt-4">
                   <Field id={`${uid}-message`} label={f.message} hint={f.optional}>
-                    <textarea
-                      id={`${uid}-message`}
-                      rows={4}
-                      placeholder={f.messagePlaceholder}
-                      value={fields.message}
-                      onChange={(e) => update('message', e.target.value)}
-                      className={`${inputClass(false)} h-auto resize-y py-3 leading-relaxed`}
-                    />
+                    <textarea id={`${uid}-message`} rows={3} placeholder={f.messagePlaceholder} value={fields.message} onChange={(e) => update('message', e.target.value)} className={`${inputClass(false)} h-auto resize-y py-3 leading-relaxed`} />
                   </Field>
                 </div>
 
-                <div className="mt-6">
-                  <label className="flex cursor-pointer items-start gap-3 text-[0.88rem] leading-relaxed text-muted">
-                    <input
-                      id={`${uid}-consent`}
-                      type="checkbox"
-                      checked={fields.consent}
-                      onChange={(e) => update('consent', e.target.checked)}
-                      aria-invalid={!!errors.consent}
-                      aria-describedby={errors.consent ? `${uid}-consent-err` : undefined}
-                      className="peer sr-only"
-                    />
-                    <span
-                      aria-hidden="true"
-                      className={`mt-0.5 grid size-5 shrink-0 place-items-center rounded-[4px] border transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-gold ${
-                        fields.consent ? 'border-gold-deep bg-gold-deep text-white' : errors.consent ? 'border-urgent' : 'border-fg/25'
-                      }`}
-                    >
-                      {fields.consent && <Check className="size-3.5" strokeWidth={2.5} />}
-                    </span>
-                    <span>
-                      {f.consent}{' '}
-                      <SmartLink href="/privacy" className="font-semibold text-gold-deep underline decoration-gold/40 underline-offset-4 hover:decoration-gold-deep">
-                        {f.consentLink}
-                      </SmartLink>
-                      .
-                    </span>
-                  </label>
-                  {errors.consent && <ErrorText id={`${uid}-consent-err`}>{errors.consent}</ErrorText>}
-                </div>
-
-                <div className="mt-8 flex flex-wrap items-center gap-5">
-                  <Button type="submit" variant="gold" size="lg" disabled={status === 'sending'} className="disabled:cursor-wait disabled:opacity-80 max-sm:w-full">
+                <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <label className="flex cursor-pointer items-start gap-3 text-[0.84rem] leading-relaxed text-ivory/70">
+                      <input id={`${uid}-consent`} type="checkbox" checked={fields.consent} onChange={(e) => update('consent', e.target.checked)} aria-invalid={!!errors.consent} aria-describedby={errors.consent ? `${uid}-consent-err` : undefined} className="peer sr-only" />
+                      <span aria-hidden="true" className={`mt-0.5 grid size-5 shrink-0 place-items-center rounded-[5px] border transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-gold ${fields.consent ? 'border-gold bg-gold text-ink' : errors.consent ? 'border-urgent' : 'border-ivory/35'}`}>
+                        {fields.consent && <Check className="size-3.5" strokeWidth={2.5} />}
+                      </span>
+                      <span>
+                        {f.consent}{' '}
+                        <SmartLink href="/privacy" className="font-semibold text-gold-light underline decoration-gold/40 underline-offset-4 hover:decoration-gold">
+                          {f.consentLink}
+                        </SmartLink>
+                        .
+                      </span>
+                    </label>
+                    {errors.consent && <ErrorText id={`${uid}-consent-err`}>{errors.consent}</ErrorText>}
+                  </div>
+                  <Button type="submit" variant="gold" size="lg" disabled={status === 'sending'} className="shrink-0 disabled:cursor-wait disabled:opacity-80 max-sm:w-full">
                     {status === 'sending' ? (
                       <>
-                        <LoaderCircle className="size-5 animate-spin" strokeWidth={1.5} aria-hidden="true" />
+                        <LoaderCircle className="size-5 animate-spin" strokeWidth={1.6} aria-hidden="true" />
                         {f.submitting}
                       </>
                     ) : (
@@ -302,16 +227,16 @@ export function Consultation() {
 }
 
 const inputClass = (invalid: boolean) =>
-  `h-12 w-full rounded-[var(--radius-btn)] border bg-ivory/60 px-4 text-[0.95rem] text-fg placeholder:text-muted/60 transition-[border-color,box-shadow,background-color] duration-300 focus:bg-white focus:outline-none focus:ring-4 ${
-    invalid ? 'border-urgent/70 focus:border-urgent focus:ring-urgent/10' : 'border-fg/12 hover:border-fg/25 focus:border-gold focus:ring-gold/15'
+  `h-12 w-full rounded-[var(--radius-btn)] border bg-ivory px-4 text-[0.93rem] text-fg placeholder:text-muted/70 transition-[border-color,box-shadow] duration-300 focus:outline-none focus:ring-4 ${
+    invalid ? 'border-urgent focus:ring-urgent/25' : 'border-transparent focus:border-gold focus:ring-gold/25'
   }`
 
 function Field({ id, label, hint, error, children }: { id: string; label: string; hint?: string; error?: string; children: ReactNode }) {
   return (
     <div>
-      <label htmlFor={id} className="mb-2 flex items-baseline justify-between text-[0.88rem] font-semibold text-fg">
+      <label htmlFor={id} className="mb-1.5 flex items-baseline justify-between text-[0.85rem] font-semibold text-ivory/85">
         {label}
-        {hint && <span className="text-[0.8rem] font-normal text-muted">{hint}</span>}
+        {hint && <span className="text-[0.78rem] font-normal text-ivory/50">{hint}</span>}
       </label>
       {children}
       {error && <ErrorText id={`${id}-err`}>{error}</ErrorText>}
@@ -321,22 +246,26 @@ function Field({ id, label, hint, error, children }: { id: string; label: string
 
 function ErrorText({ id, children }: { id: string; children: ReactNode }) {
   return (
-    <p id={id} className="mt-2 text-[0.82rem] text-urgent">
+    <p id={id} className="mt-1.5 text-[0.8rem] text-[#F4A29A]">
       {children}
     </p>
   )
 }
 
-function Info({ icon, title, children }: { icon: ReactNode; title: string; children: ReactNode }) {
+function ContactItem({ icon, href, label, value, ltr, external }: { icon: ReactNode; href: string; label: string; value: string; ltr?: boolean; external?: boolean }) {
   return (
-    <div className="flex gap-3">
-      <span className="mt-0.5 text-gold" aria-hidden="true">
-        {icon}
-      </span>
-      <div>
-        <dt className="text-[0.8rem] text-ivory/50">{title}</dt>
-        <dd className="mt-1 text-[0.93rem] text-ivory/90">{children}</dd>
-      </div>
-    </div>
+    <li>
+      <a href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})} className="group flex items-center gap-3">
+        <span className="grid size-10 place-items-center rounded-full border border-gold/40 text-gold transition-colors group-hover:bg-gold/10" aria-hidden="true">
+          {icon}
+        </span>
+        <span className="leading-tight">
+          <span className="block text-[0.75rem] text-ivory/50">{label}</span>
+          <span dir={ltr ? 'ltr' : undefined} className="block font-semibold text-ivory transition-colors group-hover:text-gold-light">
+            {value}
+          </span>
+        </span>
+      </a>
+    </li>
   )
 }

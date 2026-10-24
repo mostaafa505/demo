@@ -1,13 +1,12 @@
 @import 'tailwindcss';
 
 /* Fonts are self-hosted through Fontsource (display=swap is built in). */
-@import '@fontsource-variable/reem-kufi/wght.css';
+@import '@fontsource-variable/noto-kufi-arabic/wght.css';
 @import '@fontsource/ibm-plex-sans-arabic/300.css';
 @import '@fontsource/ibm-plex-sans-arabic/400.css';
 @import '@fontsource/ibm-plex-sans-arabic/500.css';
 @import '@fontsource/ibm-plex-sans-arabic/600.css';
 @import '@fontsource-variable/cormorant-garamond/wght.css';
-@import '@fontsource-variable/cormorant-garamond/wght-italic.css';
 @import '@fontsource-variable/manrope/wght.css';
 
 @custom-variant rtl (&:where([dir='rtl'], [dir='rtl'] *));
@@ -19,36 +18,37 @@
 /* ------------------------------------------------------------------ */
 @theme {
   --color-ink: #0a0f1a;
+  --color-ink-2: #0e1626;
   --color-navy: #111a2b;
-  --color-navy-2: #18233a;
   --color-gold: #c9a45c;
   --color-gold-light: #e6cb8e;
   --color-gold-deep: #9c7a3c;
+  --color-gold-ink: #7a5b26;
   --color-ivory: #faf7f1;
   --color-sand: #f3ecdf;
-  --color-sand-deep: #e9dfcc;
+  --color-stone: #e9dfcc;
+  --color-cream: #fbf3e4;
   --color-fg: #141821;
   --color-muted: #5b6170;
   --color-urgent: #b42318;
   --color-urgent-deep: #8f1b12;
 
-  --font-display: var(--ff-display);
+  --font-heading: var(--ff-heading);
   --font-sans: var(--ff-body);
   --font-latin-display: 'Cormorant Garamond Variable', 'Cormorant Garamond', Georgia, serif;
   --font-latin: 'Manrope Variable', 'Manrope', system-ui, sans-serif;
 
-  /* Fluid type scale (ratio ~1.25, Bringhurst-style measured steps) */
-  --text-display: clamp(2.6rem, 1.55rem + 4.1vw, 5.4rem);
-  --text-h2: clamp(2rem, 1.45rem + 2.2vw, 3.4rem);
-  --text-h3: clamp(1.25rem, 1.1rem + 0.55vw, 1.6rem);
-  --text-lead: clamp(1.05rem, 1rem + 0.3vw, 1.25rem);
-  --text-eyebrow: 0.75rem;
+  --text-display: clamp(2.2rem, 1.5rem + 2.6vw, 3.7rem);
+  --text-h2: clamp(1.75rem, 1.35rem + 1.5vw, 2.6rem);
+  --text-h3: clamp(1.08rem, 1rem + 0.3vw, 1.25rem);
+  --text-lead: clamp(1.02rem, 0.97rem + 0.25vw, 1.18rem);
 
-  --radius-card: 10px;
-  --radius-btn: 6px;
+  --radius-card: 12px;
+  --radius-btn: 8px;
 
-  --shadow-card: 0 1px 2px rgb(10 15 26 / 0.04), 0 12px 32px -18px rgb(10 15 26 / 0.18);
-  --shadow-lift: 0 2px 4px rgb(10 15 26 / 0.05), 0 28px 48px -24px rgb(10 15 26 / 0.28);
+  --shadow-card: 0 1px 1px rgb(20 24 33 / 0.03), 0 10px 30px -18px rgb(80 60 20 / 0.28);
+  --shadow-lift: 0 2px 2px rgb(20 24 33 / 0.03), 0 22px 44px -22px rgb(80 60 20 / 0.38);
+  --shadow-gold: 0 10px 24px -12px rgb(156 122 60 / 0.75);
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
@@ -58,38 +58,31 @@
 
 /* Per-language faces and rhythm */
 :root {
-  --ff-display: 'Reem Kufi Variable', 'Reem Kufi', 'IBM Plex Sans Arabic', serif;
+  --ff-heading: 'Noto Kufi Arabic Variable', 'Noto Kufi Arabic', 'IBM Plex Sans Arabic', sans-serif;
   --ff-body: 'IBM Plex Sans Arabic', 'Manrope Variable', system-ui, sans-serif;
-  --lh-body: 1.85;
-  --lh-display: 1.3;
-  --display-weight: 600;
-  --display-tracking: 0;
-  --ff-quote: 'IBM Plex Sans Arabic', sans-serif;
-  --ff-title: 'IBM Plex Sans Arabic', sans-serif;
+  --heading-weight: 700;
+  --ff-title: var(--ff-heading);
   --title-weight: 600;
-  --quote-style: normal;
-  --quote-weight: 300;
-  --header-h: 140px;
-  --header-h-compact: 68px;
+  --heading-lh: 1.45;
+  --heading-tracking: 0;
+  --lh-body: 1.85;
+  --header-h: 148px;
 }
 
 :root:lang(en) {
-  --ff-display: 'Cormorant Garamond Variable', 'Cormorant Garamond', Georgia, serif;
+  --ff-heading: 'Cormorant Garamond Variable', 'Cormorant Garamond', Georgia, serif;
   --ff-body: 'Manrope Variable', 'Manrope', system-ui, sans-serif;
+  --heading-weight: 600;
+  --ff-title: 'Manrope Variable', 'Manrope', system-ui, sans-serif;
+  --title-weight: 700;
+  --heading-lh: 1.12;
+  --heading-tracking: -0.01em;
   --lh-body: 1.65;
-  --lh-display: 1.04;
-  --display-weight: 500;
-  --display-tracking: -0.015em;
-  --ff-quote: 'Cormorant Garamond Variable', 'Cormorant Garamond', Georgia, serif;
-  --quote-style: italic;
-  --quote-weight: 500;
-  --ff-title: 'Cormorant Garamond Variable', 'Cormorant Garamond', Georgia, serif;
-  --title-weight: 600;
 }
 
 @media (max-width: 1279px) {
   :root {
-    --header-h: 68px;
+    --header-h: 72px;
   }
 }
 
@@ -132,7 +125,7 @@
   :focus-visible {
     outline: 2px solid var(--color-gold);
     outline-offset: 3px;
-    border-radius: 2px;
+    border-radius: 3px;
   }
 
   img {
@@ -145,27 +138,27 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* Components & utilities                                              */
+/* Utilities                                                           */
 /* ------------------------------------------------------------------ */
 @utility container-site {
   width: 100%;
-  max-width: 1280px;
+  max-width: 1320px;
   margin-inline: auto;
-  padding-inline: clamp(1rem, 4vw, 2.5rem);
+  padding-inline: clamp(1rem, 3.5vw, 2.5rem);
 }
 
-@utility font-heading {
-  font-family: var(--ff-display);
-  font-weight: var(--display-weight);
-  line-height: var(--lh-display);
-  letter-spacing: var(--display-tracking);
+@utility font-display {
+  font-family: var(--ff-heading);
+  font-weight: var(--heading-weight);
+  line-height: var(--heading-lh);
+  letter-spacing: var(--heading-tracking);
 }
 
-/* Card and list titles: Arabic stays in the text face (Reem Kufi is a display cut). */
+/* Card titles: same family as headings, a step lighter */
 @utility font-title {
   font-family: var(--ff-title);
   font-weight: var(--title-weight);
-  letter-spacing: 0;
+  line-height: 1.5;
 }
 
 @utility text-display {
@@ -178,67 +171,32 @@
 
 @utility text-h3 {
   font-size: var(--text-h3);
-  line-height: 1.45;
-}
-
-@utility font-quote {
-  font-family: var(--ff-quote);
-  font-style: var(--quote-style);
-  font-weight: var(--quote-weight);
 }
 
 @utility text-lead {
   font-size: var(--text-lead);
 }
 
-/* English eyebrow over Arabic headings (and vice versa) */
-@utility eyebrow {
-  font-family: var(--font-latin);
-  font-size: var(--text-eyebrow);
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  line-height: 1.4;
-}
-
-@utility eyebrow-ar {
-  font-family: 'IBM Plex Sans Arabic', sans-serif;
-  font-size: 0.875rem;
-  font-weight: 500;
-  letter-spacing: 0;
-  line-height: 1.6;
-}
-
 @utility bg-gold-grad {
-  background-image: linear-gradient(135deg, #e6cb8e 0%, #c9a45c 48%, #9c7a3c 100%);
+  background-image: linear-gradient(135deg, #ecd398 0%, #c9a45c 46%, #a8843f 100%);
 }
 
 @utility text-gold-grad {
-  background-image: linear-gradient(135deg, #e6cb8e 0%, #c9a45c 48%, #9c7a3c 100%);
+  background-image: linear-gradient(135deg, #ecd398 0%, #c9a45c 46%, #9c7a3c 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-@utility hairline {
-  border-color: color-mix(in srgb, var(--color-gold) 22%, transparent);
+/* Fine paper grain for ivory and sand grounds */
+@utility paper {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.36 0 0 0 0 0.2 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-@utility hairline-dark {
-  border-color: color-mix(in srgb, var(--color-gold) 18%, transparent);
-}
-
-@utility grain {
-  position: relative;
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.09;
-    mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
+/* Khatam (eight-point star) lattice for dark grounds — drawn in gold at very low opacity */
+@utility khatam {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23C9A45C' stroke-width='0.6' opacity='0.5'%3E%3Cpath d='M36 14l6.4 15.6L58 36l-15.6 6.4L36 58l-6.4-15.6L14 36l15.6-6.4z'/%3E%3Cpath d='M20.4 20.4h31.2v31.2H20.4z' transform='rotate(45 36 36)'/%3E%3Cpath d='M20.4 20.4h31.2v31.2H20.4z'/%3E%3Cpath d='M0 36h14M58 36h14M36 0v14M36 58v14'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 72px 72px;
 }
 
 @utility no-scrollbar {
@@ -267,10 +225,10 @@ html.lenis body {
   pointer-events: none;
 }
 
-/* SplitText masks: give Arabic ascenders/descenders room inside the mask */
+/* SplitText masks: room for Arabic ascenders/descenders inside the mask */
 .split-line-mask {
-  padding-block: 0.08em;
-  margin-block: -0.08em;
+  padding-block: 0.12em;
+  margin-block: -0.12em;
 }
 
 @media (prefers-reduced-motion: reduce) {

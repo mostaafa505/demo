@@ -1,14 +1,20 @@
-import { CalendarDays, Globe2, Landmark, Scale, ShieldCheck } from 'lucide-react'
+import { CalendarDays, Globe2, Landmark, Scale, UsersRound } from 'lucide-react'
 import { useRef } from 'react'
 import { images } from '../assets/images'
 import Magnet from '../components/reactbits/Magnet'
-import ShinyText from '../components/reactbits/ShinyText'
+import { ArchOutline } from '../components/ui/ArchOutline'
 import { ButtonLink } from '../components/ui/Button'
+import { Medallion } from '../components/ui/Medallion'
 import { useLang } from '../i18n/LanguageProvider'
-import { gsap, MOTION_OK, MOTION_REDUCED, SplitText, useGSAP } from '../motion/gsap'
+import { gsap, MOTION_OK, SplitText, useGSAP } from '../motion/gsap'
 
-const TRUST_ICONS = [ShieldCheck, Landmark, Globe2]
+const TRUST_ICONS = [UsersRound, Landmark, Globe2]
 
+/**
+ * The client's hero — copy on one side, photograph on the other — with the
+ * photograph set in an arched window traced by a gold hairline.
+ * The page's single orchestrated moment: arch draws, photo rises inside it, headline follows.
+ */
 export function Hero() {
   const { t, lang } = useLang()
   const ref = useRef<HTMLElement>(null)
@@ -16,119 +22,89 @@ export function Hero() {
   useGSAP(
     () => {
       const mm = gsap.matchMedia()
-
       mm.add(MOTION_OK, () => {
-        const origin = lang === 'ar' ? '100% 50%' : '0% 50%'
+        const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
+        requestAnimationFrame(() => {
+          const arch = ref.current?.querySelector<SVGPathElement>('[data-arch-line]')
+          if (!arch) return
+          const len = arch.getTotalLength()
+          gsap.fromTo(arch, { strokeDasharray: len, strokeDashoffset: len }, { strokeDashoffset: 0, duration: 1.7, ease: 'power2.inOut' })
+        })
+        tl.fromTo('[data-arch-photo]', { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.3, ease: 'expo.inOut' }, 0.1)
+          .from('[data-arch-photo] img', { scale: 1.12, duration: 1.8 }, 0.1)
+          .from('[data-hero-text]', { autoAlpha: 0, y: 16, duration: 0.8, stagger: 0.08, ease: 'power3.out' }, 0.55)
+          .from('[data-hero-trust]', { autoAlpha: 0, y: 12, duration: 0.6, stagger: 0.07, ease: 'power3.out' }, 0.9)
 
-        // Slow settle of the photograph, independent of the text sequence.
-        gsap.fromTo('[data-hero-img]', { scale: 1.14 }, { scale: 1.04, duration: 2.6, ease: 'expo.out' })
-
-        // One orchestrated entrance (< 1.6s). Arabic is split by words inside masked lines — never by characters.
+        // Headline by lines only — Arabic letters stay joined.
         SplitText.create('[data-hero-title]', {
-          type: 'words,lines',
+          type: 'lines',
           mask: 'lines',
           linesClass: 'split-line',
           autoSplit: true,
-          onSplit: (self) => {
-            const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
-            tl.from(self.words, { yPercent: 115, duration: 1.05, stagger: 0.045 }, 0.1)
-              .from('[data-hero-eyebrow]', { autoAlpha: 0, y: 10, duration: 0.8 }, 0.15)
-              .from('[data-hero-rule]', { scaleX: 0, transformOrigin: origin, duration: 1 }, 0.55)
-              .from('[data-hero-text]', { autoAlpha: 0, y: 18, duration: 0.9, ease: 'power3.out' }, 0.62)
-              .from('[data-hero-cta]', { autoAlpha: 0, y: 16, duration: 0.8, stagger: 0.08, ease: 'power3.out' }, 0.78)
-              .from('[data-hero-trust]', { autoAlpha: 0, y: 12, duration: 0.7, stagger: 0.08, ease: 'power3.out' }, 0.95)
-              .from('[data-hero-trust-rule]', { scaleX: 0, transformOrigin: origin, duration: 1.2 }, 0.9)
-            return tl
-          },
+          onSplit: (self) => gsap.from(self.lines, { yPercent: 105, duration: 1.1, stagger: 0.1, ease: 'expo.out', delay: 0.25 }),
         })
-
-        // Scroll: the photograph drifts slower than the page, the copy eases away.
-        gsap.to('[data-hero-bg]', {
-          yPercent: 16,
-          ease: 'none',
-          scrollTrigger: { trigger: ref.current, start: 'top top', end: 'bottom top', scrub: true },
-        })
-        gsap.to('[data-hero-content]', {
-          y: -60,
-          autoAlpha: 0.15,
-          ease: 'none',
-          scrollTrigger: { trigger: ref.current, start: 'top top', end: 'bottom 20%', scrub: true },
-        })
-      })
-
-      mm.add(MOTION_REDUCED, () => {
-        gsap.from('[data-hero-content], [data-hero-trust]', { autoAlpha: 0, duration: 0.6 })
       })
     },
     { scope: ref, dependencies: [lang] },
   )
 
   return (
-    <section ref={ref} id="top" aria-labelledby="hero-title" className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-ink text-ivory">
-      {/* Background photograph */}
-      <div data-hero-bg aria-hidden="true" className="absolute inset-0 -z-10 will-change-transform">
-        <picture>
-          <source media="(max-width: 767px)" srcSet={images.heroMobile} />
-          <img
-            data-hero-img
-            src={images.hero}
-            alt=""
-            fetchPriority="high"
-            decoding="async"
-            className="absolute inset-0 size-full object-cover object-[30%_55%] ltr:-scale-x-100 max-md:object-[20%_40%]"
-          />
-        </picture>
-        <div className="absolute inset-0 bg-ink/40" />
-        <div className="absolute inset-0 from-ink via-ink/80 to-ink/5 ltr:bg-gradient-to-r rtl:bg-gradient-to-l max-md:bg-none" />
-        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-ink via-ink/70 to-transparent md:h-1/2" />
-        <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-ink/70 to-transparent" />
-        <div className="grain absolute inset-0" />
-      </div>
-      <span className="sr-only">{t.hero.imageAlt}</span>
+    <section ref={ref} id="top" aria-labelledby="hero-title" className="paper relative overflow-hidden bg-ivory">
+      {/* Soft light pooling behind the arch */}
+      <div aria-hidden="true" className="pointer-events-none absolute -top-40 end-[-10%] size-[44rem] rounded-full bg-[radial-gradient(closest-side,rgb(236_211_152/0.38),transparent)]" />
 
-      <div className="container-site relative flex flex-1 flex-col justify-end pb-10 pt-[calc(var(--header-h)+4rem)] md:justify-center md:pb-16">
-        <div data-hero-content className="max-w-[46rem]">
-          <p data-hero-eyebrow lang={lang === 'ar' ? 'en' : 'ar'} className={`text-gold-light ${lang === 'ar' ? 'eyebrow' : 'eyebrow-ar'}`}>
-            {t.hero.eyebrow}
-          </p>
-          <h1 id="hero-title" data-hero-title className="font-heading text-display mt-5 text-ivory">
+      <div className="container-site relative grid items-center gap-x-12 gap-y-10 pb-12 pt-8 lg:grid-cols-12 lg:gap-y-9 lg:pb-12 lg:pt-12">
+        {/* Copy */}
+        <div className="order-2 lg:order-1 lg:col-span-6 xl:col-span-6">
+          <h1 id="hero-title" data-hero-title className="font-display text-display text-fg">
             {t.hero.title}
           </h1>
-          <span data-hero-rule aria-hidden="true" className="mt-7 block h-px w-28 bg-gold-grad" />
-          <p data-hero-text className="text-lead mt-7 max-w-[56ch] text-ivory/75">
+          <span data-hero-text aria-hidden="true" className="mt-6 block h-[2px] w-20 rounded-full bg-gold-grad" />
+          <p data-hero-text className="text-lead mt-6 max-w-[54ch] text-muted">
             {t.hero.text}
           </p>
-          <div className="mt-9 flex flex-wrap items-center gap-3 sm:gap-4">
-            <div data-hero-cta>
-              <Magnet padding={70} magnetStrength={4} maxOffset={10} spring={{ stiffness: 160, damping: 18 }}>
-                <ButtonLink href="/#consultation" variant="gold" size="lg">
-                  <CalendarDays className="size-5" strokeWidth={1.5} aria-hidden="true" />
-                  <ShinyText color="#0A0F1A" shineColor="#8A6A2E" speed={2.6} delay={4.5} angle={110} shineWidth={24} direction={lang === 'ar' ? 'right' : 'left'}>
-                    {t.hero.primaryCta}
-                  </ShinyText>
-                </ButtonLink>
-              </Magnet>
-            </div>
-            <div data-hero-cta>
-              <ButtonLink href="/#assess" variant="outline-light" size="lg">
-                <Scale className="size-5" strokeWidth={1.5} aria-hidden="true" />
-                {t.hero.secondaryCta}
+          <div data-hero-text className="mt-8 flex flex-wrap items-center gap-3 sm:gap-4">
+            <Magnet padding={60} magnetStrength={5} maxOffset={8} spring={{ stiffness: 170, damping: 20 }}>
+              <ButtonLink href="/#consultation" variant="gold" size="lg">
+                <CalendarDays className="size-5" strokeWidth={1.6} aria-hidden="true" />
+                {t.hero.primaryCta}
               </ButtonLink>
+            </Magnet>
+            <ButtonLink href="/#assess" variant="outline-dark" size="lg">
+              <Scale className="size-5" strokeWidth={1.6} aria-hidden="true" />
+              {t.hero.secondaryCta}
+            </ButtonLink>
+          </div>
+
+        </div>
+
+        {/* Arched window */}
+        <div className="order-1 lg:order-2 lg:col-span-6 xl:col-span-6">
+          <div className="relative mx-auto aspect-[100/92] w-full max-w-[34rem] lg:aspect-[100/100] lg:max-w-none xl:max-w-[34rem]">
+            <ArchOutline offset={14} className="text-gold max-lg:hidden" />
+            <div data-arch-photo className="absolute inset-0 overflow-hidden rounded-t-[999px] rounded-b-[14px] bg-sand shadow-[var(--shadow-lift)] max-lg:rounded-t-[220px]">
+              <img
+                src={images.hero.src}
+                srcSet={images.hero.srcSet}
+                sizes="(min-width: 1024px) 46vw, 92vw"
+                alt={t.hero.imageAlt}
+                fetchPriority="high"
+                decoding="async"
+                className="size-full object-cover object-[42%_50%]"
+              />
+              <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-ink/25 via-transparent to-transparent" />
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="container-site relative pb-24 md:pb-10">
-        <span data-hero-trust-rule aria-hidden="true" className="block h-px w-full bg-gold/25" />
-        <ul className="grid gap-4 pt-6 sm:grid-cols-3 sm:gap-8">
+        {/* Trust points */}
+        <ul className="order-3 grid gap-4 border-t border-stone pt-7 sm:grid-cols-3 sm:gap-6 lg:col-span-12">
           {t.hero.trust.map((item, i) => {
             const Icon = TRUST_ICONS[i]
             return (
-              <li key={item} data-hero-trust className="flex items-center gap-3.5 text-[0.9rem] leading-snug text-ivory/80">
-                <span className="grid size-10 shrink-0 place-items-center rounded-full border border-gold/35 text-gold">
-                  <Icon className="size-[18px]" strokeWidth={1.5} aria-hidden="true" />
-                </span>
+              <li key={item} data-hero-trust className="flex items-center gap-3 text-[0.9rem] font-medium leading-snug text-fg/80">
+                <Medallion size="sm">
+                  <Icon strokeWidth={1.6} aria-hidden="true" />
+                </Medallion>
                 {item}
               </li>
             )

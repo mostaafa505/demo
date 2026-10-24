@@ -1,38 +1,41 @@
 # Images
 
-Every photo on the site is currently a **low-resolution placeholder cropped from the reference designs**
-(`references/`, via `scripts/crop-references.py`). Replace each file in `src/assets/images/` with the
-client's real photograph, **keeping the same file name**, and the site picks it up automatically.
+Source files from the client live in `references/client/`. `scripts/process-assets.py` turns them into the
+web assets in `src/assets/` (responsive WebP at several widths, plus the knocked-out logos):
 
-Export as WebP (quality ~80). Sizes below are the minimum for sharp results on retina screens.
+```bash
+python3 scripts/process-assets.py          # photos + logos + footer artwork
+python3 scripts/process-assets.py --logos  # logos only
+```
 
-| File | Used in | Aspect | Minimum size | What to shoot |
-|---|---|---|---|---|
-| `hero-family-skyline.webp` | Hero background (desktop & tablet) | 16:9 | 2880 × 1620 | Golden-hour family facing the Dubai/Abu Dhabi skyline. Keep the subject on one side — the headline sits on the other. In English the photo is mirrored. |
-| `hero-scales-desk.webp` | Hero background (phones) | 4:5 | 1200 × 1500 | Warm desk detail: scales, legal books, skyline behind. |
-| `service-civil-marriage.webp` | Services | 5:6 | 1200 × 1440 | Rings, signing a marriage contract. |
-| `service-divorce.webp` | Services | 5:6 | 1200 × 1440 | Calm, non-dramatic separation imagery (two chairs, documents). |
-| `service-children-custody.webp` | Services | 5:6 | 1200 × 1440 | Parent and child, warm light. |
-| `service-maintenance.webp` | Services | 5:6 | 1200 × 1440 | Financial documents, calculator, coins — understated. |
-| `service-inheritance.webp` | Services | 5:6 | 1200 × 1440 | Family home, keys, estate documents. |
-| `service-wills.webp` | Services | 5:6 | 1200 × 1440 | Fountain pen on a will. |
-| `service-international.webp` | Services, mega-menu | 5:6 | 1200 × 1440 | Passports, globe, airport at dusk. |
-| `service-emirates.webp` | Services | 5:6 | 1200 × 1440 | UAE skyline. |
-| `city-abu-dhabi.webp` | Emirates (wide card) | 16:15 | 1600 × 1500 | Sheikh Zayed Grand Mosque / Corniche at golden hour. |
-| `city-dubai.webp` | Emirates | 3:5 | 900 × 1500 | Burj Khalifa / Downtown. |
-| `city-sharjah.webp` | Emirates | 3:5 | 900 × 1500 | Sharjah waterfront / Al Noor Mosque. |
-| `lawyer-ahmed-el-shawi.webp` | Lawyers (featured) | 4:5 | 1200 × 1500 | Professional portrait, neutral warm background, head and shoulders. |
-| `lawyer-sara-mahmoud.webp` | Lawyers | 4:5 | 900 × 1125 | Same lighting and background as the others. |
-| `lawyer-karim-el-awady.webp` | Lawyers | 4:5 | 900 × 1125 | Same lighting and background as the others. |
-| `knowledge-article.webp` | Knowledge (article card) | 4:3 | 1200 × 900 | Article cover. |
-| `knowledge-podcast.webp` | Knowledge (podcast card) | 4:3 | 1200 × 900 | Podcast cover / microphone. |
-| `knowledge-video.webp` | *(unused — has a baked-in play button)* | — | — | Video thumbnails should be clean frames; the site adds its own play button. |
-| `skyline-abu-dhabi-dusk.webp` | "Why us" background, video card placeholder | 16:5 | 2880 × 900 | Abu Dhabi skyline at dusk. |
-| `footer-skyline.webp` | Footer horizon | 5:1 | 2880 × 580 | Night skyline with warm lights (an illustration also works). |
-| `cta-skyline.webp` | Booking section background | 3:1 | 1800 × 600 | Skyline at dusk. |
-| `testimonial-pen.webp`, `knowledge-gavel-books.webp` | *(spare)* | — | — | — |
+To replace a photo, drop the new file into `references/client/` under the same name and run the script.
 
-Portraits are shown in warm monochrome and turn to colour on hover, so consistent lighting matters more
-than colour grading.
+## Client photography (in use)
 
-`public/og-image.webp` is the social-sharing image (1200 × 630 recommended).
+| Source file | Output | Used in |
+|---|---|---|
+| `slide mobil.png` | `hero-slide-*.webp` | Hero, inside the arched window |
+| `الزواج المدني.jpg` | `service-civil-marriage-*.webp` | Services |
+| `الطلاق و الانفصال.jpg` | `service-divorce-*.webp` | Services, prenup article card (mobile) |
+| `الاطفال والحضانه.jpg` | `service-children-custody-*.webp` | Services |
+| `النفقه و المسائل الماليه .jpg` | `service-maintenance-*.webp` | Services, podcast card (mobile) |
+| `الميراث.jpg` | `service-inheritance-*.webp` | Services, video card (mobile) |
+| `الوصايا.jpg` | `service-wills-*.webp` | Services |
+| `الفضايه لادوليه.jpg` | `service-international-*.webp` | Services, mega-menu |
+| `الامارات والمدن.jpg` | `service-emirates-*.webp` | Services, booking band background |
+| `ابو ظبي.jpg`, `دبي.jpg`, `الشارقه.jpg` | `city-*.webp` | Emirates & cities |
+| `fotter dektob.png` | `footer-horizon-*.webp` | Desktop footer skyline and gold horizon |
+| `logo desktop.png` | `brand/logo-desktop-light.webp` (ivory lettering), `brand/logo-desktop-dark.webp` | Desktop header, footer |
+| `LOGO MOBIL.png` | `brand/logo-mobile-light.webp` | Mobile header, mobile menu, mobile footer |
+
+## Still placeholders (low resolution, cropped from the reference designs)
+
+| File | Used in | Needed |
+|---|---|---|
+| `lawyer-ahmed-el-shawi.webp` | Lawyers | Portrait, 4:5, at least 800 × 1000, head and shoulders, plain warm background |
+| `lawyer-sara-mahmoud.webp` | Lawyers | Same lighting and background as the others |
+| `lawyer-karim-el-awady.webp` | Lawyers | Same lighting and background as the others |
+| `knowledge-gavel-books.webp` | Knowledge centre (desktop) | Library / gavel still, 3:4, at least 700 × 900 |
+
+Regenerate them with `python3 scripts/crop-references.py`, or replace the files with real photos of the same name.
+`public/og-image.webp` (social sharing, 1200 × 630) should also be replaced.

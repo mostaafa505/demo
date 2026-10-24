@@ -111,7 +111,7 @@ export const en: Content = {
       'A deep understanding of the UAE legal system',
       'Experienced in international and cross-border cases',
     ],
-    imageAlt: 'A family looking out over the Dubai skyline at sunset',
+    imageAlt: 'Scales of justice and law books before the Dubai skyline at sunset',
   },
   services: {
     eyebrow: 'الخدمات الرئيسية',
@@ -292,11 +292,11 @@ export const en: Content = {
     readMore: 'Read more',
     latest: 'Latest',
     categories: [
-      { key: 'articles', title: 'Legal articles', text: 'Analysis and guides, updated regularly', href: '/knowledge/articles' },
-      { key: 'videos', title: 'Videos', text: 'Short visual legal explainers', href: '/knowledge/videos' },
-      { key: 'podcast', title: 'Podcast', text: 'Plain-language talks with our lawyers', href: '/knowledge/podcast' },
-      { key: 'webinars', title: 'Webinars & live', text: 'Live sessions answering your questions', href: '/knowledge/webinars' },
-      { key: 'faq', title: 'FAQ', text: 'Answers to the questions we hear most', href: '/knowledge/faq' },
+      { key: 'articles', title: 'Legal articles', text: 'Analysis and guides, updated regularly', cta: 'Browse articles', href: '/knowledge/articles' },
+      { key: 'videos', title: 'Videos', text: 'Short visual legal explainers', cta: 'Watch now', href: '/knowledge/videos' },
+      { key: 'podcast', title: 'Podcast', text: 'Plain-language talks with our lawyers', cta: 'Listen now', href: '/knowledge/podcast' },
+      { key: 'webinars', title: 'Webinars & live', text: 'Live sessions answering your questions', cta: 'See events', href: '/knowledge/webinars' },
+      { key: 'faq', title: 'FAQ', text: 'Answers to the questions we hear most', cta: 'Explore', href: '/knowledge/faq' },
     ],
     articles: [
       { category: 'Video', title: 'How estates are distributed for non-Muslims in the UAE', date: '2026-09-15', readTime: '6:45 min', href: '/knowledge/inheritance-distribution', image: 'video' },

@@ -1,34 +1,45 @@
 import { Plus } from 'lucide-react'
 import { useId, useRef, useState } from 'react'
-import { SectionHeading } from '../components/ui/SectionHeading'
-import { TextLink } from '../components/ui/TextLink'
+import { Panel } from '../components/ui/Panel'
+import { SmartLink } from '../components/ui/SmartLink'
 import { useLang } from '../i18n/LanguageProvider'
 import { gsap, MOTION_OK, useGSAP } from '../motion/gsap'
 import { useReveal } from '../motion/useReveal'
 
+const chip = 'inline-flex h-8 items-center rounded-full border border-gold-deep/50 bg-white px-4 text-[0.8rem] font-semibold text-gold-ink transition-colors hover:bg-cream'
+
 export function Faq() {
   const { t } = useLang()
   const ref = useRef<HTMLElement>(null)
-  const [open, setOpen] = useState<number | null>(0)
+  const [open, setOpen] = useState<number | null>(null)
   useReveal(ref)
   const items = t.faq.items
   const half = Math.ceil(items.length / 2)
-  const columns = [items.slice(0, half), items.slice(half)]
 
   return (
-    <section ref={ref} id="faq" aria-labelledby="faq-title" className="bg-sand py-20 lg:py-32">
+    <section ref={ref} id="faq" className="bg-ivory pb-16 pt-6 lg:pb-20">
       <div className="container-site">
-        <SectionHeading id="faq-title" eyebrow={t.faq.eyebrow} title={t.faq.title} lead={t.faq.lead} action={<TextLink href="/knowledge/faq">{t.faq.viewAll}</TextLink>} />
-        <div className="mt-12 grid gap-x-12 lg:mt-16 lg:grid-cols-2">
-          {columns.map((col, c) => (
-            <ul key={c} data-reveal-group className={`border-t hairline ${c === 1 ? 'max-lg:border-t-0' : ''}`}>
-              {col.map((item, i) => {
-                const idx = c * half + i
-                return <FaqItem key={item.q} q={item.q} a={item.a} open={open === idx} onToggle={() => setOpen(open === idx ? null : idx)} />
-              })}
-            </ul>
-          ))}
-        </div>
+        <Panel
+          id="faq-title"
+          title={t.faq.title}
+          lead={t.faq.lead}
+          action={
+            <SmartLink href="/knowledge/faq" className={chip}>
+              {t.faq.viewAll}
+            </SmartLink>
+          }
+        >
+          <div className="grid gap-3 lg:grid-cols-2 lg:gap-4">
+            {[items.slice(0, half), items.slice(half)].map((col, c) => (
+              <ul key={c} data-reveal-group className="space-y-3">
+                {col.map((item, i) => {
+                  const idx = c * half + i
+                  return <FaqItem key={item.q} q={item.q} a={item.a} open={open === idx} onToggle={() => setOpen(open === idx ? null : idx)} />
+                })}
+              </ul>
+            ))}
+          </div>
+        </Panel>
       </div>
     </section>
   )
@@ -44,28 +55,24 @@ function FaqItem({ q, a, open, onToggle }: { q: string; a: string; open: boolean
       const el = panelRef.current!
       const animate = !first.current && window.matchMedia(MOTION_OK).matches
       first.current = false
-      if (!animate) {
-        gsap.set(el, { height: open ? 'auto' : 0 })
-        return
-      }
-      gsap.to(el, { height: open ? 'auto' : 0, duration: open ? 0.65 : 0.45, ease: open ? 'expo.out' : 'power3.inOut', overwrite: true })
-      if (open) gsap.fromTo(el.firstElementChild, { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 0.5, delay: 0.1 })
+      if (!animate) return void gsap.set(el, { height: open ? 'auto' : 0 })
+      gsap.to(el, { height: open ? 'auto' : 0, duration: open ? 0.55 : 0.4, ease: open ? 'power3.out' : 'power2.inOut', overwrite: true })
     },
     { dependencies: [open] },
   )
 
   return (
-    <li data-reveal-item className="border-b hairline">
+    <li data-reveal-item className={`rounded-[var(--radius-card)] border bg-white shadow-[var(--shadow-card)] transition-colors duration-300 ${open ? 'border-gold/45' : 'border-stone'}`}>
       <h3>
-        <button type="button" id={`${id}-q`} aria-expanded={open} aria-controls={`${id}-a`} onClick={onToggle} className="group/faq flex w-full items-start gap-5 py-6 text-start">
-          <span className={`flex-1 text-[1.02rem] font-semibold leading-relaxed transition-colors ${open ? 'text-fg' : 'text-fg/85 group-hover/faq:text-fg'}`}>{q}</span>
-          <span className={`mt-0.5 grid size-8 shrink-0 place-items-center rounded-full border transition-colors duration-300 ${open ? 'border-gold bg-gold text-ink' : 'border-gold/40 text-gold-deep'}`}>
-            <Plus className={`size-4 transition-transform duration-500 ease-[var(--ease-out-expo)] ${open ? 'rotate-45' : ''}`} strokeWidth={1.5} aria-hidden="true" />
+        <button type="button" id={`${id}-q`} aria-expanded={open} aria-controls={`${id}-a`} onClick={onToggle} className="flex w-full items-center gap-4 px-5 py-4 text-start">
+          <span className="flex-1 text-[0.95rem] font-semibold leading-relaxed text-fg">{q}</span>
+          <span className={`grid size-8 shrink-0 place-items-center rounded-full transition-colors duration-300 ${open ? 'bg-gold-grad text-ink' : 'bg-cream text-gold-deep ring-1 ring-inset ring-gold/30'}`}>
+            <Plus className={`size-4 transition-transform duration-500 ease-[var(--ease-out-expo)] ${open ? 'rotate-45' : ''}`} strokeWidth={1.8} aria-hidden="true" />
           </span>
         </button>
       </h3>
-      <div ref={panelRef} id={`${id}-a`} role="region" aria-labelledby={`${id}-q`} className="h-0 overflow-hidden" hidden={false}>
-        <p className="max-w-[60ch] pb-6 pe-12 text-[0.95rem] leading-relaxed text-muted">{a}</p>
+      <div ref={panelRef} id={`${id}-a`} role="region" aria-labelledby={`${id}-q`} className="h-0 overflow-hidden">
+        <p className="border-t border-stone px-5 pb-5 pt-4 text-[0.9rem] leading-relaxed text-muted">{a}</p>
       </div>
     </li>
   )

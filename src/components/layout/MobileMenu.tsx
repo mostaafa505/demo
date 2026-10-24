@@ -73,9 +73,9 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
       className="invisible fixed inset-0 z-[60] flex flex-col overflow-y-auto bg-ink text-ivory xl:hidden"
       style={{ clipPath: 'inset(0% 0% 100% 0%)' }}
     >
-      <div className="container-site flex h-[68px] shrink-0 items-center justify-between border-b border-gold/15">
+      <div className="container-site flex h-[72px] shrink-0 items-center justify-between border-b border-gold/15">
         <SmartLink href="/" onClick={onClose} tabIndex={open ? 0 : -1}>
-          <Logo size="sm" compact />
+          <Logo variant="mobile" className="h-9" />
         </SmartLink>
         <div className="flex items-center gap-2">
           <LangSwitch compact />

@@ -111,7 +111,7 @@ export const ar: Content = {
       'فهم عميق للنظام القانوني في دولة الإمارات',
       'خبرة في القضايا الدولية والعابرة للحدود',
     ],
-    imageAlt: 'عائلة تتأمل أفق دبي عند الغروب',
+    imageAlt: 'ميزان العدالة وكتب القانون أمام أفق دبي عند الغروب',
   },
   services: {
     eyebrow: 'Practice Areas',
@@ -292,11 +292,11 @@ export const ar: Content = {
     readMore: 'اقرأ المزيد',
     latest: 'أحدث المنشورات',
     categories: [
-      { key: 'articles', title: 'مقالات قانونية', text: 'تحليلات وأدلة محدّثة بانتظام', href: '/knowledge/articles' },
-      { key: 'videos', title: 'فيديوهات', text: 'شروحات قانونية مرئية مختصرة', href: '/knowledge/videos' },
-      { key: 'podcast', title: 'بودكاست', text: 'نقاشات قانونية مبسّطة مع خبرائنا', href: '/knowledge/podcast' },
-      { key: 'webinars', title: 'الندوات والبث المباشر', text: 'لقاءات مباشرة للإجابة عن أسئلتكم', href: '/knowledge/webinars' },
-      { key: 'faq', title: 'الأسئلة الشائعة', text: 'إجابات على أكثر الأسئلة تكراراً', href: '/knowledge/faq' },
+      { key: 'articles', title: 'مقالات قانونية', text: 'تحليلات وأدلة محدّثة بانتظام', cta: 'تصفح المقالات', href: '/knowledge/articles' },
+      { key: 'videos', title: 'فيديوهات', text: 'شروحات قانونية مرئية مختصرة', cta: 'شاهد الآن', href: '/knowledge/videos' },
+      { key: 'podcast', title: 'بودكاست', text: 'نقاشات قانونية مبسّطة مع خبرائنا', cta: 'استمع الآن', href: '/knowledge/podcast' },
+      { key: 'webinars', title: 'الندوات والبث المباشر', text: 'لقاءات مباشرة للإجابة عن أسئلتكم', cta: 'شاهد الفعاليات', href: '/knowledge/webinars' },
+      { key: 'faq', title: 'الأسئلة الشائعة', text: 'إجابات على أكثر الأسئلة تكراراً', cta: 'استكشف', href: '/knowledge/faq' },
     ],
     articles: [
       { category: 'فيديو', title: 'توزيع التركة لغير المسلمين في الإمارات', date: '2026-09-15', readTime: '6:45 دقيقة', href: '/knowledge/inheritance-distribution', image: 'video' },
