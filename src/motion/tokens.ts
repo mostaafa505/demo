@@ -8,6 +8,9 @@ export const DURATION = 0.9
 export const STAGGER = 0.08
 export const START = 'clamp(top 85%)' // clamp(): elements near the page end still trigger
 
+/** False when the page was revealed without animation (inline fallback after a very slow load). */
+export const animating = () => typeof document !== 'undefined' && document.documentElement.classList.contains('js-anim')
+
 export const MQ = {
   motion: '(prefers-reduced-motion: no-preference)',
   mobile: '(max-width: 767px)',

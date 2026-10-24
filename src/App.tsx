@@ -1,5 +1,6 @@
 import { useLayoutEffect } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
+import { Intro } from './components/brand/Intro'
 import { Footer } from './components/layout/Footer'
 import { Header } from './components/layout/Header'
 import { MobileActionBar } from './components/layout/MobileActionBar'
@@ -14,14 +15,17 @@ export function App() {
   // Animation start states (styles/index.css) apply only once the app is running; the inline
   // script in index.html adds the class before first paint and lifts it if the app never starts.
   useLayoutEffect(() => {
-    ;(window as Window & { __appReady?: boolean }).__appReady = true
-    document.documentElement.classList.add('js-anim')
+    const w = window as Window & { __appReady?: boolean; __animFallback?: boolean }
+    w.__appReady = true
+    // If the inline fallback already revealed everything (very slow load), keep it that way.
+    if (!w.__animFallback) document.documentElement.classList.add('js-anim')
   }, [])
 
   // Keying by language remounts every section, so split headings and ScrollTrigger
   // re-measure for the new direction and typeface.
   return (
     <div key={lang}>
+      <Intro />
       <Header />
       <main id="main" tabIndex={-1} className="outline-none">
         <Routes>

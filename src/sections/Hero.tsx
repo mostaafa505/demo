@@ -6,8 +6,9 @@ import { ButtonLink } from '../components/ui/Button'
 import { Medallion } from '../components/ui/Medallion'
 import { useLang } from '../i18n/LanguageProvider'
 import { gsap, useGSAP } from '../motion/gsap'
+import { onIntroReveal } from '../motion/intro'
 import { fontsReady, splitLines } from '../motion/splitLines'
-import { CLEAR, DURATION, EASE_IN, EASE_LONG, MQ, origins, scale } from '../motion/tokens'
+import { animating, CLEAR, DURATION, EASE_IN, EASE_LONG, MQ, origins, scale } from '../motion/tokens'
 
 const TRUST_ICONS = [UsersRound, Landmark, Globe2]
 
@@ -28,37 +29,45 @@ export function Hero() {
       const mm = gsap.matchMedia()
       mm.add({ motion: MQ.motion, mobile: MQ.mobile }, (ctx) => {
         const { motion, mobile } = ctx.conditions as { motion: boolean; mobile: boolean }
-        if (!motion) return
+        if (!motion || !animating()) return
         const { y, d } = scale(mobile)
         const o = origins()
 
-        const tl = gsap.timeline({ defaults: { ease: EASE_IN } })
-        tl.fromTo('[data-hero-photo]', { scale: 1.08 }, { scale: 1, duration: 2.4, ease: 'power2.out' }, 0)
-          .fromTo('[data-hero-rule]', { scaleX: 0, transformOrigin: o.start }, { scaleX: 1, duration: d(0.8), ease: EASE_LONG }, 0.7)
-          .fromTo('[data-hero-text]', { autoAlpha: 0, y }, { autoAlpha: 1, y: 0, duration: d(DURATION), clearProps: CLEAR }, 0.8)
-          .fromTo('[data-hero-cta] > *', { autoAlpha: 0, y }, { autoAlpha: 1, y: 0, duration: d(DURATION), stagger: 0.1, clearProps: CLEAR }, 1.0)
-          .fromTo('[data-hero-trust]', { autoAlpha: 0, y: mobile ? 24 : 40 }, { autoAlpha: 1, y: 0, duration: d(DURATION), stagger: 0.12, clearProps: CLEAR }, 1.2)
-          .fromTo('[data-hero-icon]', { scale: 0.7 }, { scale: 1, duration: d(0.6), stagger: 0.12, clearProps: CLEAR }, 1.3)
-
-        // Headline by lines (words grouped into lines — Arabic letters stay joined). Waits at most
-        // 200ms for the webfont so the lines are the real ones and the headline still starts by 0.3s.
-        const t0 = performance.now()
-        const title = ref.current!.querySelector<HTMLElement>('[data-hero-title]')!
         let revertTitle = () => {}
-        const buildTitle = ctx.add('buildTitle', () => {
-          const s = splitLines(title)
-          revertTitle = s.revert
-          gsap.set(title, { visibility: 'visible' })
-          gsap.fromTo(s.lines, { yPercent: 100 }, { yPercent: 0, duration: d(1), stagger: 0.12, ease: EASE_IN, delay: Math.max(0, 0.2 - (performance.now() - t0) / 1000), onComplete: s.revert })
-        })
-        fontsReady(200).then(() => !ctx.isReverted && buildTitle())
+        // Starts at once, or at the opening intro's reveal moment.
+        const cancel = onIntroReveal(
+          ctx.add('enter', () => {
+            const tl = gsap.timeline({ defaults: { ease: EASE_IN } })
+            tl.fromTo('[data-hero-photo]', { scale: 1.08 }, { scale: 1, duration: 2.4, ease: 'power2.out' }, 0)
+              .fromTo('[data-hero-rule]', { scaleX: 0, transformOrigin: o.start }, { scaleX: 1, duration: d(0.8), ease: EASE_LONG }, 0.7)
+              .fromTo('[data-hero-text]', { autoAlpha: 0, y }, { autoAlpha: 1, y: 0, duration: d(DURATION), clearProps: CLEAR }, 0.8)
+              .fromTo('[data-hero-cta] > *', { autoAlpha: 0, y }, { autoAlpha: 1, y: 0, duration: d(DURATION), stagger: 0.1, clearProps: CLEAR }, 1.0)
+              .fromTo('[data-hero-trust]', { autoAlpha: 0, y: mobile ? 24 : 40 }, { autoAlpha: 1, y: 0, duration: d(DURATION), stagger: 0.12, clearProps: CLEAR }, 1.2)
+              .fromTo('[data-hero-icon]', { scale: 0.7 }, { scale: 1, duration: d(0.6), stagger: 0.12, clearProps: CLEAR }, 1.3)
+
+            // Headline by lines (words grouped into lines — Arabic letters stay joined). Waits at most
+            // 200ms for the webfont so the lines are the real ones and the headline still starts by 0.3s.
+            const t0 = performance.now()
+            const title = ref.current!.querySelector<HTMLElement>('[data-hero-title]')!
+            const buildTitle = ctx.add('buildTitle', () => {
+              const s = splitLines(title)
+              revertTitle = s.revert
+              gsap.set(title, { visibility: 'visible' })
+              gsap.fromTo(s.lines, { yPercent: 100 }, { yPercent: 0, duration: d(1), stagger: 0.12, ease: EASE_IN, delay: Math.max(0, 0.2 - (performance.now() - t0) / 1000), onComplete: s.revert })
+            })
+            fontsReady(200).then(() => !ctx.isReverted && buildTitle())
+          }) as () => void,
+        )
 
         if (!mobile) {
           const scrub = { trigger: ref.current, start: 'top top', end: 'bottom top', scrub: true }
           gsap.fromTo('[data-hero-drift]', { yPercent: 0 }, { yPercent: 10, ease: 'none', scrollTrigger: scrub })
           gsap.fromTo('[data-hero-copy]', { opacity: 1 }, { opacity: 0.6, ease: 'none', scrollTrigger: scrub })
         }
-        return () => revertTitle()
+        return () => {
+          cancel()
+          revertTitle()
+        }
       })
     },
     { scope: ref, dependencies: [lang] },
@@ -71,16 +80,7 @@ export function Hero() {
         {/* Mirrored in English so the family stays clear of the copy (mirror on the wrapper: GSAP owns the img's transform) */}
         <div data-hero-drift className="absolute inset-x-0 -bottom-[6%] top-0">
           <div className="size-full ltr:-scale-x-100">
-            <img
-              data-hero-photo
-              src={images.hero.src}
-              srcSet={images.hero.srcSet}
-              sizes="100vw"
-              alt=""
-              fetchPriority="high"
-              decoding="async"
-              className="size-full object-cover object-[30%_45%]"
-            />
+            <img data-hero-photo src={images.hero.src} srcSet={images.hero.srcSet} sizes="100vw" alt="" fetchPriority="high" decoding="async" className="size-full object-cover object-[30%_45%]" />
           </div>
         </div>
         <div className="absolute inset-0 from-ivory from-[36%] via-ivory/75 via-[48%] to-ivory/0 to-[62%] ltr:bg-gradient-to-r rtl:bg-gradient-to-l" />

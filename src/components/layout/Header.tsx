@@ -6,7 +6,8 @@ import { site } from '../../config/site'
 import type { NavItem } from '../../content/types'
 import { useLang } from '../../i18n/LanguageProvider'
 import { gsap, ScrollTrigger, useGSAP } from '../../motion/gsap'
-import { EASE_IN, MQ, origins } from '../../motion/tokens'
+import { introActive, onIntroReveal } from '../../motion/intro'
+import { animating, EASE_IN, MQ, origins } from '../../motion/tokens'
 import { Logo, LogoMark } from '../brand/Logo'
 import { ServiceIcon } from '../brand/ServiceIcon'
 import { SocialIcon } from '../brand/SocialIcon'
@@ -37,13 +38,28 @@ export function Header() {
       const progress = gsap.fromTo('[data-progress]', { scaleX: 0 }, { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: true } })
 
       const mm = gsap.matchMedia()
-      mm.add(MQ.motion, () => {
+      mm.add(MQ.motion, (ctx) => {
+        if (!animating()) return
         const o = origins()
-        // Arrival: identity row settles from above, links follow in reading order.
-        gsap.fromTo('[data-header-row]', { autoAlpha: 0, y: -16 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: EASE_IN, clearProps: 'transform' })
-        gsap.fromTo('[data-header-nav] > li', { autoAlpha: 0, x: o.rtl ? 12 : -12 }, { autoAlpha: 1, x: 0, duration: 0.6, stagger: 0.05, delay: 0.15, ease: EASE_IN, clearProps: 'transform' })
+        // Arrival: identity row settles from above, links follow in reading order. After the
+        // opening intro the rows only fade (the logo must land exactly where the intro left it).
+        const afterIntro = introActive()
+        const cancel = onIntroReveal(
+          ctx.add('arrive', () => {
+            gsap.fromTo('[data-header-row]', { autoAlpha: 0, y: afterIntro ? 0 : -16 }, { autoAlpha: 1, y: 0, duration: afterIntro ? 0.4 : 0.6, ease: EASE_IN, clearProps: 'transform' })
+            gsap.fromTo(
+              '[data-header-nav] > li',
+              { autoAlpha: 0, x: o.rtl ? 12 : -12 },
+              { autoAlpha: 1, x: 0, duration: 0.6, stagger: 0.05, delay: afterIntro ? 0.05 : 0.15, ease: EASE_IN, clearProps: 'transform' },
+            )
+          }) as () => void,
+        )
         // "Urgent" icon: one quiet pulse every six seconds; the button itself never moves.
-        gsap.timeline({ repeat: -1, repeatDelay: 6, delay: 3 }).to('[data-pulse]', { scale: 1.08, duration: 0.35, ease: 'power2.inOut' }).to('[data-pulse]', { scale: 1, duration: 0.45, ease: 'power2.inOut' })
+        gsap
+          .timeline({ repeat: -1, repeatDelay: 6, delay: 3 })
+          .to('[data-pulse]', { scale: 1.08, duration: 0.35, ease: 'power2.inOut' })
+          .to('[data-pulse]', { scale: 1, duration: 0.45, ease: 'power2.inOut' })
+        return cancel
       })
       return () => {
         st.kill()
@@ -72,6 +88,7 @@ export function Header() {
       <div aria-hidden="true" style={{ height: 'var(--header-h)' }} />
       <header
         ref={headerRef}
+        data-site-header
         className={`fixed inset-x-0 top-0 z-50 text-ivory transition-[background-color,backdrop-filter] duration-400 ${compact ? 'bg-ink/90 backdrop-blur-md' : 'bg-ink'}`}
         onKeyDown={(e) => e.key === 'Escape' && setOpenIndex(null)}
       >
@@ -84,7 +101,7 @@ export function Header() {
         <div className="relative hidden xl:block">
           <div ref={topRowRef} className="overflow-hidden">
             <div data-header-row className="container-site flex h-[5.75rem] items-center gap-6">
-              <SmartLink href="/" aria-label={site.brand.wordmark} className="shrink-0">
+              <SmartLink href="/" aria-label={site.brand.wordmark} data-header-logo="desktop" className="shrink-0">
                 <Logo variant="light" className="h-[3.625rem]" />
               </SmartLink>
               <HeaderSearch />
@@ -132,7 +149,7 @@ export function Header() {
         {/* ---------- Mobile / tablet ---------- */}
         <div className="relative xl:hidden">
           <div data-header-row className="container-site flex h-[4.5rem] items-center gap-1.5 xs:gap-2 sm:gap-3">
-            <SmartLink href="/" aria-label={site.brand.wordmark} className="me-auto min-w-0 shrink">
+            <SmartLink href="/" aria-label={site.brand.wordmark} data-header-logo="mobile" className="me-auto min-w-0 shrink">
               <Logo variant="mobile" className="h-9 max-[379px]:h-[1.875rem] sm:h-10" />
             </SmartLink>
             <a href={site.phones.mobile.href} aria-label={t.a11y.call} className={iconBtn}>
@@ -180,7 +197,13 @@ function PhoneBlock() {
           <span className="text-[0.74rem] text-ivory/60">{t.header.phoneCaption}</span>
         </span>
       </a>
-      <a href={site.whatsapp.href} target="_blank" rel="noopener noreferrer" aria-label={t.a11y.whatsapp} className="grid size-10 place-items-center rounded-full bg-gold-grad text-ink shadow-[var(--shadow-gold)] transition-[filter] hover:brightness-105">
+      <a
+        href={site.whatsapp.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={t.a11y.whatsapp}
+        className="grid size-10 place-items-center rounded-full bg-gold-grad text-ink shadow-[var(--shadow-gold)] transition-[filter] hover:brightness-105"
+      >
         <SocialIcon name="whatsapp" className="size-5" />
       </a>
     </div>
@@ -251,7 +274,11 @@ function DesktopNav({ items, openIndex, setOpenIndex }: { items: NavItem[]; open
             <li key={item.href} className="relative flex h-full items-center" onPointerEnter={() => (hasMenu ? scheduleOpen(i) : scheduleClose())}>
               {i > 1 && <span aria-hidden="true" className="h-4 w-px bg-ivory/12" />}
               {isHome ? (
-                <SmartLink href="/" aria-current="page" className="me-1 flex h-10 items-center gap-2 rounded-[var(--radius-btn)] bg-gold-grad px-4 text-[0.88rem] font-semibold text-ink shadow-[var(--shadow-gold)]">
+                <SmartLink
+                  href="/"
+                  aria-current="page"
+                  className="me-1 flex h-10 items-center gap-2 rounded-[var(--radius-btn)] bg-gold-grad px-4 text-[0.88rem] font-semibold text-ink shadow-[var(--shadow-gold)]"
+                >
                   <Home className="size-4" strokeWidth={1.8} aria-hidden="true" />
                   {item.label}
                 </SmartLink>
@@ -344,9 +371,19 @@ function MegaMenu({ id, item, open, onNavigate }: { id: string; item: NavItem; o
           <ul className="col-span-8 grid grid-cols-2 gap-x-8 gap-y-1">
             {item.children!.map((child, i) => (
               <li key={child.href} data-menu-item>
-                <SmartLink href={child.href} onClick={onNavigate} tabIndex={open ? 0 : -1} className="group/item flex items-center gap-4 rounded-[var(--radius-card)] p-3 transition-colors hover:bg-ivory/[0.04]">
+                <SmartLink
+                  href={child.href}
+                  onClick={onNavigate}
+                  tabIndex={open ? 0 : -1}
+                  className="group/item flex items-center gap-4 rounded-[var(--radius-card)] p-3 transition-colors hover:bg-ivory/[0.04]"
+                >
                   <span className="relative block size-16 shrink-0 overflow-hidden rounded-[0.625rem] ring-1 ring-gold/25">
-                    <Picture pic={images.services[services[i]?.image ?? 'civil-marriage']} sizes="64px" alt="" className="size-full object-cover transition-transform duration-700 group-hover/item:scale-110" />
+                    <Picture
+                      pic={images.services[services[i]?.image ?? 'civil-marriage']}
+                      sizes="64px"
+                      alt=""
+                      className="size-full object-cover transition-transform duration-700 group-hover/item:scale-110"
+                    />
                   </span>
                   <span className="min-w-0">
                     <span className="flex items-center gap-2 text-[0.98rem] font-semibold text-ivory transition-colors group-hover/item:text-gold-light">

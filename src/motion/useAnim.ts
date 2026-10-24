@@ -1,7 +1,7 @@
 import type { RefObject } from 'react'
 import { gsap, ScrollTrigger, useGSAP } from './gsap'
 import { fontsReady, splitLines, type SplitLines } from './splitLines'
-import { CLEAR, DURATION, EASE_IN, EASE_LONG, MQ, origins, scale, STAGGER, START } from './tokens'
+import { animating, CLEAR, DURATION, EASE_IN, EASE_LONG, MQ, origins, scale, STAGGER, START } from './tokens'
 
 /*
  * Reusable scroll animations, declared in markup:
@@ -33,7 +33,7 @@ export function useAnim(scope: RefObject<HTMLElement | null>) {
 
       mm.add({ motion: MQ.motion, mobile: MQ.mobile }, (ctx) => {
         const { motion, mobile } = ctx.conditions as { motion: boolean; mobile: boolean }
-        if (!motion) return
+        if (!motion || !animating()) return
         const { y, d } = scale(mobile)
         const o = origins()
         const q = gsap.utils.selector(root)

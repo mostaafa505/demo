@@ -266,11 +266,43 @@ html.lenis body {
   .js-anim [data-anim='img-reveal'] {
     clip-path: inset(100% 0 0 0);
   }
+  .js-anim [data-hero-photo] {
+    transform: scale(1.08);
+  }
   .js-anim [data-anim='line'],
   .js-anim [data-anim='section-head'] [data-ornament-line],
   .js-anim [data-hero-rule] {
     transform: scaleX(0);
   }
+}
+
+/* Opening intro (components/brand/Intro.tsx) — only while html.intro-active is set */
+.intro {
+  display: none;
+}
+.intro-active .intro {
+  display: block;
+}
+.intro-active:not(.intro-revealed) [data-site-header] {
+  visibility: hidden;
+}
+.intro-active [data-header-logo] img {
+  opacity: 0;
+}
+.intro-active [data-layer^='col-shaft'] {
+  transform: scaleY(0);
+}
+.intro-active [data-layer='col-base'],
+.intro-active [data-layer='underline'] {
+  transform: scaleX(0);
+}
+.intro-active [data-layer='col-capital'],
+.intro-active [data-layer='col-top'] {
+  opacity: 0;
+}
+.intro-active [data-layer='text-title'],
+.intro-active [data-layer='text-subtitle'] {
+  clip-path: inset(0 100% 0 0);
 }
 
 /* Gold-leaf sheen across primary buttons on hover — travels with the reading direction */

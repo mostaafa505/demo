@@ -19,8 +19,46 @@
       ;(function (d) {
         d.classList.add('js-anim')
         setTimeout(function () {
-          if (!window.__appReady) d.classList.remove('js-anim')
+          if (window.__appReady) return
+          d.classList.remove('js-anim')
+          window.__animFallback = true // the app will not re-hide content when it arrives late
         }, 4000)
+      })(document.documentElement)
+
+      // Opening intro: first page of the visit only, never with reduced motion. Its layers are
+      // preloaded; if the intro has not started within 3.5s it is dropped and the site shows.
+      ;(function (d) {
+        try {
+          if (sessionStorage.getItem('ufl-intro-seen')) return
+          if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
+        } catch (e) {
+          return
+        }
+        d.classList.add('intro-active')
+        var layers = 'col-base col-shaft-1 col-shaft-2 col-shaft-3 col-shaft-4 col-capital col-top text-title text-subtitle underline'.split(' ')
+        var loaded = 0
+        layers.forEach(function (n) {
+          var l = document.createElement('link')
+          l.rel = 'preload'
+          l.as = 'image'
+          l.href = '/brand/intro/' + n + '.png'
+          l.onload = function () {
+            loaded++
+          }
+          document.head.appendChild(l)
+        })
+        var drop = function () {
+          d.classList.remove('intro-active')
+          window.__introSkipped = true
+        }
+        // Layers not all in after 1.2s (slow connection): skip rather than hold a blank screen.
+        setTimeout(function () {
+          if (loaded < layers.length && !window.__introStarted) drop()
+        }, 1200)
+        // Script failed or very late: never hold the site behind the intro.
+        setTimeout(function () {
+          if (!window.__introStarted) drop()
+        }, 3500)
       })(document.documentElement)
     </script>
   </head>
