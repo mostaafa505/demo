@@ -57,8 +57,13 @@ export function Header() {
         else if (self.direction === -1 || y < 200) show(true)
       },
     })
-    return () => st.kill()
-  })
+    const progress = gsap.to('[data-progress]', { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: 0.4 } })
+    return () => {
+      st.kill()
+      progress.scrollTrigger?.kill()
+      progress.kill()
+    }
+  }, { scope: headerRef })
 
   useGSAP(
     () => {
@@ -78,7 +83,9 @@ export function Header() {
       <div aria-hidden="true" style={{ height: 'var(--header-h)' }} />
       <header ref={headerRef} className="fixed inset-x-0 top-0 z-50 bg-ink text-ivory" onKeyDown={(e) => e.key === 'Escape' && setOpenIndex(null)}>
         <div aria-hidden="true" className="khatam pointer-events-none absolute inset-0 opacity-[0.05]" />
-        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold/45 to-transparent" />
+        {/* Reading progress: a gold hairline that fills as the page scrolls */}
+        <div aria-hidden="true" data-progress className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gold-grad rtl:origin-right" />
 
         {/* ---------- Desktop ---------- */}
         <div className="relative hidden xl:block">

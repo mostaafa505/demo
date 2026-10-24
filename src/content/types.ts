@@ -193,7 +193,7 @@ export interface Content {
     columns: { title: string; links: Link[] }[]
     contactTitle: string
     contact: { phone: string; whatsapp: string; email: string; office: string; hours: string; chatNow: string }
-    cta: { title: string; text: string; primary: string; secondary: string }
+    cta: { title: string; titleAccent: string; text: string; primary: string; secondary: string }
     legal: Link[]
     copyright: string
     trn: string

@@ -83,7 +83,7 @@ export function Consultation() {
   return (
     <section ref={ref} id="consultation" aria-labelledby="consultation-title" className="relative isolate scroll-mt-24 overflow-hidden bg-ink text-ivory">
       <div aria-hidden="true" className="absolute inset-0 -z-10">
-        <Picture pic={images.ctaBand} sizes="100vw" alt="" className="size-full object-cover object-[50%_60%] opacity-45" />
+        <Picture pic={images.ctaBand} sizes="100vw" alt="" data-drift className="size-full object-cover object-[50%_60%] opacity-45" />
         <div className="absolute inset-0 from-ink via-ink/88 to-ink/55 ltr:bg-gradient-to-l rtl:bg-gradient-to-r" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/60" />
         <div className="khatam absolute inset-0 opacity-[0.06]" />

@@ -9,8 +9,11 @@ import cityDubai800 from './city-dubai-800.webp'
 import citySharjah1200 from './city-sharjah-1200.webp'
 import citySharjah480 from './city-sharjah-480.webp'
 import citySharjah800 from './city-sharjah-800.webp'
-import footerHorizon1200 from './footer-horizon-1200.webp'
-import footerHorizon2167 from './footer-horizon-2167.webp'
+import footerArt1400 from './footer-art-1400.webp'
+import footerArt2167 from './footer-art-2167.webp'
+import heroDesktop1024 from './hero-desktop-1024.webp'
+import heroDesktop1440 from './hero-desktop-1440.webp'
+import heroDesktop1774 from './hero-desktop-1774.webp'
 import heroSlide1280 from './hero-slide-1280.webp'
 import heroSlide1774 from './hero-slide-1774.webp'
 import heroSlide800 from './hero-slide-800.webp'
@@ -56,7 +59,8 @@ const pic = (sources: Record<number, string>): Picture => {
 }
 
 export const images = {
-  hero: pic({ 800: heroSlide800, 1280: heroSlide1280, 1774: heroSlide1774 }),
+  hero: pic({ 1024: heroDesktop1024, 1440: heroDesktop1440, 1774: heroDesktop1774 }),
+  heroMobile: pic({ 800: heroSlide800, 1280: heroSlide1280, 1774: heroSlide1774 }),
   services: {
     'civil-marriage': pic({ 480: marriage480, 800: marriage800, 1200: marriage1200 }),
     divorce: pic({ 480: divorce480, 800: divorce800, 1200: divorce1200 }),
@@ -74,6 +78,6 @@ export const images = {
   } as Record<string, Picture>,
   lawyers: { 'ahmed-el-shawi': ahmed, 'sara-mahmoud': sara, 'karim-el-awady': karim } as Record<string, string>,
   ctaBand: pic({ 800: emirates800, 1200: emirates1200, 2000: emirates2000 }),
-  footerHorizon: pic({ 1200: footerHorizon1200, 2167: footerHorizon2167 }),
+  footerArt: pic({ 1400: footerArt1400, 2167: footerArt2167 }),
   gavelBooks,
 }

@@ -4,7 +4,7 @@
 - Logos   -> transparent WebP (light-on-dark and original) in src/assets/brand/
 - Footer  -> skyline/horizon art strip
 
-Run: python3 scripts/process-assets.py
+Run: python3 scripts/process-assets.py [--only=logos,footer,hero-desktop]
 """
 from pathlib import Path
 
@@ -32,6 +32,7 @@ PHOTOS = {
     "دبي.jpg": ("city-dubai", (480, 800, 1200), None),
     "الشارقه.jpg": ("city-sharjah", (480, 800, 1200), None),
     "slide mobil.png": ("hero-slide", (800, 1280, 1774), None),
+    "slide dektop.png": ("hero-desktop", (1024, 1440, 1774), None),
 }
 
 
@@ -113,18 +114,36 @@ def logos():
 
 
 def footer_art():
+    """Client's footer artwork without its baked-in logo (the real logo is laid over it in code)."""
     img = Image.open(SRC / "fotter dektob.png").convert("RGB")
     w, h = img.size
-    strip = img.crop((0, int(h * 0.44), w, h))  # skyline + gold horizon, below the baked-in logo
-    strip.save(IMG / "footer-horizon-2167.webp", "WEBP", quality=80, method=6)
-    strip.resize((1200, round(strip.height * 1200 / w)), Image.LANCZOS).save(IMG / "footer-horizon-1200.webp", "WEBP", quality=80, method=6)
-    print("footer-horizon", strip.size)
+    arr = np.array(img).astype(np.float64)
+    # Patch the logo (x 99-507, y 61-185) with empty texture from the same rows further right.
+    x0, x1, y0, y1, pad = 99, 507, 61, 185, 26
+    l, r, t, b = x0 - pad, x1 + pad, y0 - pad, y1 + pad
+    patch = arr[t:b, 1150 : 1150 + (r - l)]
+    yy, xx = np.mgrid[t:b, l:r]
+    edge = np.minimum.reduce([xx - l, r - 1 - xx, yy - t, b - 1 - yy]).astype(np.float64)
+    mask = np.clip(edge / pad, 0, 1)[..., None]
+    arr[t:b, l:r] = arr[t:b, l:r] * (1 - mask) + patch * mask
+    clean = Image.fromarray(arr.round().astype(np.uint8))
+    for width in (1400, 2167):
+        out = clean if width == w else clean.resize((width, round(h * width / w)), Image.LANCZOS)
+        out.save(IMG / f"footer-art-{width}.webp", "WEBP", quality=82, method=6)
+        print(f"footer-art-{width}.webp", out.size)
 
 
 if __name__ == "__main__":
     import sys
-    if "--logos" not in sys.argv:
-        for file, (name, widths, _) in PHOTOS.items():
+
+    # Optional: --only=logos,footer,<photo output name>  (default: everything)
+    only = next((a.split("=", 1)[1].split(",") for a in sys.argv if a.startswith("--only=")), None)
+    if "--logos" in sys.argv:
+        only = ["logos"]
+    for file, (name, widths, _) in PHOTOS.items():
+        if only is None or name in only:
             save_widths(Image.open(SRC / file).convert("RGB"), name, widths)
-    logos()
-    footer_art()
+    if only is None or "logos" in only:
+        logos()
+    if only is None or "footer" in only:
+        footer_art()

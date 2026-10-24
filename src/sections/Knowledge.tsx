@@ -39,7 +39,7 @@ export function Knowledge() {
           {/* Desktop: formats beside the library still, as in the client's layout */}
           <div className="hidden gap-3 lg:grid lg:grid-cols-[1.25fr_repeat(5,1fr)]">
             <div data-reveal="fade" className="relative overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-card)]">
-              <img src={images.gavelBooks} alt="" loading="lazy" className="absolute inset-0 size-full object-cover" />
+              <img src={images.gavelBooks} alt="" loading="lazy" data-drift className="absolute inset-0 size-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/30 to-transparent" />
             </div>
             <ul data-reveal-group className="contents">

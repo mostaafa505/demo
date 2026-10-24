@@ -111,7 +111,7 @@ export const en: Content = {
       'A deep understanding of the UAE legal system',
       'Experienced in international and cross-border cases',
     ],
-    imageAlt: 'Scales of justice and law books before the Dubai skyline at sunset',
+    imageAlt: 'A family looking out over the Dubai skyline at sunset',
   },
   services: {
     eyebrow: 'الخدمات الرئيسية',
@@ -416,7 +416,8 @@ export const en: Content = {
     contactTitle: 'Contact us',
     contact: { phone: 'Call us', whatsapp: 'WhatsApp', email: 'Email', office: 'Our office', hours: 'Office hours', chatNow: 'Chat now' },
     cta: {
-      title: 'Get legal advice today',
+      title: 'Get legal advice',
+      titleAccent: 'today',
       text: 'Let our specialist team help with your family, inheritance and wills matters.',
       primary: 'Book a consultation',
       secondary: 'Assess your case first',

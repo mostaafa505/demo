@@ -55,7 +55,7 @@ export function WhyEmirates() {
               <li key={city.slug} data-reveal-item>
                 <SmartLink href={city.href} className="group/city flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-stone bg-white shadow-[var(--shadow-card)] transition-[border-color,box-shadow] duration-500 hover:border-gold/45 hover:shadow-[var(--shadow-lift)]">
                   <span className="relative block aspect-[4/3.4] overflow-hidden">
-                    <Picture pic={images.cities[city.slug]} sizes="(min-width: 1024px) 200px, 31vw" alt={city.imageAlt} className="size-full object-cover transition-transform duration-[1.1s] ease-[var(--ease-out-expo)] group-hover/city:scale-[1.07]" />
+                    <span data-drift className="block size-full"><Picture pic={images.cities[city.slug]} sizes="(min-width: 1024px) 200px, 31vw" alt={city.imageAlt} className="size-full object-cover transition-[scale] duration-[1.1s] ease-[var(--ease-out-expo)] group-hover/city:scale-[1.07]" /></span>
                   </span>
                   <span className="relative flex flex-1 flex-col items-center px-2 pb-3 pt-6 text-center sm:px-3 sm:pb-4">
                     <span className="absolute -top-4 left-1/2 inline-flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full border border-stone bg-white px-3.5 py-1 font-title text-[0.9rem] text-fg shadow-[var(--shadow-card)] sm:text-[1rem]">

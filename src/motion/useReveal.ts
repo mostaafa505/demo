@@ -8,6 +8,7 @@ import { gsap, MOTION_OK, useGSAP } from './gsap'
  *   data-reveal="panel"   framed panel: rises 20px
  *   data-reveal="fade"    plain rise + fade
  *   data-reveal-group     container whose [data-reveal-item] children stagger in
+ *   data-drift            image that drifts a few percent against the scroll inside its frame
  *
  * Everything plays once. With reduced motion nothing animates — content is simply there.
  */
@@ -28,8 +29,23 @@ export function useReveal(scope: RefObject<HTMLElement | null>) {
           if (lines.length) tl.from(lines, { scaleX: 0, duration: 1, ease: 'expo.out' }, 0.2)
         })
 
-        q('[data-reveal="panel"], [data-reveal="fade"]').forEach((el) => {
+        q('[data-reveal="panel"]').forEach((el) => {
+          const tl = gsap.timeline({ scrollTrigger: once(el, 'top 90%') })
+          tl.from(el, { autoAlpha: 0, y: 24, duration: 0.9, ease: 'power3.out' })
+          const notch = el.querySelector('[data-panel-notch]')
+          if (notch) tl.from(notch, { y: -14, autoAlpha: 0, duration: 0.8, ease: 'back.out(1.6)' }, 0.25)
+          const lines = el.querySelectorAll(':scope > div [data-ornament-line]')
+          if (lines.length) tl.from(lines, { scaleX: 0, duration: 1, ease: 'expo.out' }, 0.35)
+        })
+
+        q('[data-reveal="fade"]').forEach((el) => {
           gsap.from(el, { autoAlpha: 0, y: 20, duration: 0.85, ease: 'power3.out', scrollTrigger: once(el, 'top 90%') })
+        })
+
+        // Depth: photographs travel slightly slower than their frames.
+        q('[data-drift]').forEach((img) => {
+          const frame = img.parentElement ?? img
+          gsap.fromTo(img, { yPercent: -5, scale: 1.12 }, { yPercent: 5, scale: 1.12, ease: 'none', scrollTrigger: { trigger: frame, start: 'top bottom', end: 'bottom top', scrub: true } })
         })
 
         q('[data-reveal-group]').forEach((group) => {

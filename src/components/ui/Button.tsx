@@ -25,7 +25,7 @@ const SIZES: Record<Size, string> = {
 }
 
 export const buttonClass = (variant: Variant = 'gold', size: Size = 'md', className = '') =>
-  `group/btn relative inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-[var(--radius-btn)] font-semibold transition-[background-color,border-color,color,box-shadow,filter] duration-300 ${VARIANTS[variant]} ${SIZES[size]} ${className}`
+  `group/btn relative inline-flex shrink-0 items-center justify-center whitespace-nowrap [&_svg]:shrink-0 rounded-[var(--radius-btn)] font-semibold transition-[background-color,border-color,color,box-shadow,filter] duration-300 ${VARIANTS[variant]} ${SIZES[size]} ${className}`
 
 interface CommonProps {
   variant?: Variant

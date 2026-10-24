@@ -5,7 +5,7 @@ web assets in `src/assets/` (responsive WebP at several widths, plus the knocked
 
 ```bash
 python3 scripts/process-assets.py          # photos + logos + footer artwork
-python3 scripts/process-assets.py --logos  # logos only
+python3 scripts/process-assets.py --only=logos,footer,hero-desktop  # selected outputs
 ```
 
 To replace a photo, drop the new file into `references/client/` under the same name and run the script.
@@ -14,7 +14,8 @@ To replace a photo, drop the new file into `references/client/` under the same n
 
 | Source file | Output | Used in |
 |---|---|---|
-| `slide mobil.png` | `hero-slide-*.webp` | Hero, inside the arched window |
+| `slide dektop.png` | `hero-desktop-*.webp` | Hero background on tablet/desktop (mirrored in English) |
+| `slide mobil.png` | `hero-slide-*.webp` | Hero photo on phones |
 | `الزواج المدني.jpg` | `service-civil-marriage-*.webp` | Services |
 | `الطلاق و الانفصال.jpg` | `service-divorce-*.webp` | Services, prenup article card (mobile) |
 | `الاطفال والحضانه.jpg` | `service-children-custody-*.webp` | Services |
@@ -24,7 +25,7 @@ To replace a photo, drop the new file into `references/client/` under the same n
 | `الفضايه لادوليه.jpg` | `service-international-*.webp` | Services, mega-menu |
 | `الامارات والمدن.jpg` | `service-emirates-*.webp` | Services, booking band background |
 | `ابو ظبي.jpg`, `دبي.jpg`, `الشارقه.jpg` | `city-*.webp` | Emirates & cities |
-| `fotter dektob.png` | `footer-horizon-*.webp` | Desktop footer skyline and gold horizon |
+| `fotter dektob.png` | `footer-art-*.webp` | Desktop footer background (baked-in logo removed; the real logo is set in code) |
 | `logo desktop.png` | `brand/logo-desktop-light.webp` (ivory lettering), `brand/logo-desktop-dark.webp` | Desktop header, footer |
 | `LOGO MOBIL.png` | `brand/logo-mobile-light.webp` | Mobile header, mobile menu, mobile footer |
 

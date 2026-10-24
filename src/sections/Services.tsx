@@ -16,7 +16,7 @@ export function Services() {
   useReveal(ref)
 
   return (
-    <section ref={ref} id="services" aria-labelledby="services-title" className="bg-ivory py-16 lg:py-20">
+    <section ref={ref} id="services" aria-labelledby="services-title" className="bg-ivory pb-16 pt-8 lg:pb-20 lg:pt-6">
       <div className="container-site">
         <SectionTitle id="services-title" title={t.services.title} lead={t.services.lead} action={<TextLink href="/services">{t.services.viewAll}</TextLink>} />
 
@@ -28,12 +28,14 @@ export function Services() {
                 className="group/card flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-stone bg-white shadow-[var(--shadow-card)] transition-[transform,box-shadow,border-color] duration-500 ease-[var(--ease-out-expo)] can-hover:hover:-translate-y-1 can-hover:hover:border-gold/45 can-hover:hover:shadow-[var(--shadow-lift)]"
               >
                 <span className="relative block aspect-[16/11] overflow-hidden">
-                  <Picture
-                    pic={images.services[item.image]}
-                    sizes="(min-width: 1320px) 300px, (min-width: 768px) 24vw, 46vw"
-                    alt=""
-                    className="size-full object-cover transition-transform duration-[1.1s] ease-[var(--ease-out-expo)] group-hover/card:scale-[1.06]"
-                  />
+                  <span data-drift className="block size-full">
+                    <Picture
+                      pic={images.services[item.image]}
+                      sizes="(min-width: 1320px) 300px, (min-width: 768px) 24vw, 46vw"
+                      alt=""
+                      className="size-full object-cover transition-[scale] duration-[1.1s] ease-[var(--ease-out-expo)] group-hover/card:scale-[1.06]"
+                    />
+                  </span>
                   <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink/25 to-transparent" />
                 </span>
                 <span className="relative flex flex-1 flex-col items-center px-3 pb-4 pt-8 text-center sm:px-5 sm:pb-5">
