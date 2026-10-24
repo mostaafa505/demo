@@ -6,9 +6,9 @@ import { site } from '../../config/site'
 type Variant = 'light' | 'dark' | 'mobile'
 
 const SOURCES: Record<Variant, { src: string; w: number; h: number }> = {
-  light: { src: logoLight, w: 1000, h: 269 }, // ivory lettering, for dark grounds
-  dark: { src: logoDark, w: 1000, h: 269 }, // black lettering, for light grounds
-  mobile: { src: logoMobile, w: 900, h: 210 }, // three-line mobile lock-up, for dark grounds
+  light: { src: logoLight, w: 560, h: 151 }, // ivory lettering, for dark grounds
+  dark: { src: logoDark, w: 560, h: 151 }, // black lettering, for light grounds
+  mobile: { src: logoMobile, w: 480, h: 112 }, // three-line mobile lock-up, for dark grounds
 }
 
 /** The client's logo files (references/client), knocked out by scripts/process-assets.py. */

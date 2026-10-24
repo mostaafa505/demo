@@ -94,7 +94,7 @@ def logos():
     fg[gold] = raw[gold]
     rgba[:, :, 3][gold] = np.clip((1 - raw.min(axis=2)[gold]) / 0.3, 0, 1)
     for img, name in ((to_image(rgba), "logo-desktop-light"), (to_image(original), "logo-desktop-dark")):
-        img.thumbnail((1000, 1000), Image.LANCZOS)
+        img.thumbnail((560, 560), Image.LANCZOS)
         img.save(BRAND / f"{name}.webp", "WEBP", quality=92, method=6)
         print(name, img.size)
 
@@ -107,7 +107,7 @@ def logos():
     rgba[:, :, 3] = np.clip((a - 0.1) / 0.9, 0, 1)
     rgba = crop_to_content(rgba)
     img = to_image(rgba)
-    img.thumbnail((900, 900), Image.LANCZOS)
+    img.thumbnail((480, 480), Image.LANCZOS)
     img.save(BRAND / "logo-mobile-light.webp", "WEBP", quality=92, method=6)
     print("logo-mobile-light", img.size, "bg", bg)
 
