@@ -25,15 +25,12 @@
         }, 4000)
       })(document.documentElement)
 
-      // Opening intro: first page of the visit only, never with reduced motion. Its layers are
-      // preloaded; if the intro has not started within 3.5s it is dropped and the site shows.
+      // Opening intro: on every load of the home page, never with reduced motion. Its layers are
+      // preloaded; if they or the app are very late, the intro is dropped and the site shows.
       ;(function (d) {
-        try {
-          if (sessionStorage.getItem('ufl-intro-seen')) return
-          if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
-        } catch (e) {
-          return
-        }
+        var path = location.pathname.replace(/\/$/, '') || '/'
+        if (path !== '/' && path !== '/en') return
+        if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return
         d.classList.add('intro-active')
         var layers = 'col-base col-shaft-1 col-shaft-2 col-shaft-3 col-shaft-4 col-capital col-top text-title text-subtitle underline'.split(' ')
         var loaded = 0
@@ -41,7 +38,7 @@
           var l = document.createElement('link')
           l.rel = 'preload'
           l.as = 'image'
-          l.href = '/brand/intro/' + n + '.png'
+          l.href = '/brand/intro/' + n + '.webp'
           l.onload = function () {
             loaded++
           }
@@ -51,14 +48,14 @@
           d.classList.remove('intro-active')
           window.__introSkipped = true
         }
-        // Layers not all in after 1.2s (slow connection): skip rather than hold a blank screen.
+        // Layers still not in after 3s (very slow connection): skip rather than hold a blank screen.
         setTimeout(function () {
           if (loaded < layers.length && !window.__introStarted) drop()
-        }, 1200)
-        // Script failed or very late: never hold the site behind the intro.
+        }, 3000)
+        // Script failed: never hold the site behind the intro.
         setTimeout(function () {
           if (!window.__introStarted) drop()
-        }, 3500)
+        }, 5000)
       })(document.documentElement)
     </script>
   </head>

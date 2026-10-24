@@ -3,7 +3,7 @@
 The client's uae-logo-parts are 560x151 (cut from the site's logo export). This rebuilds the
 same layers from the original 1888px logo: every pixel of the high-resolution logo is assigned
 to the layer whose 560px footprint contains it, so names, positions and proportions match the
-client's parts exactly. Output: public/brand/intro/*.png
+client's parts exactly. Output: public/brand/intro/*.webp
 
 Run: python3 scripts/intro-parts.py
 """
@@ -58,8 +58,8 @@ if __name__ == "__main__":
         cover |= mask
         part = fa.copy()
         part[~mask] = 0
-        Image.fromarray(part).save(OUT / f"{name}.png", optimize=True)
-    full.save(OUT / "logo-full.png", optimize=True)
+        Image.fromarray(part).save(OUT / f"{name}.webp", "WEBP", quality=92, method=6, alpha_quality=100)
+    full.save(OUT / "logo-full.webp", "WEBP", quality=92, method=6, alpha_quality=100)
 
     visible = fa[:, :, 3] > 20
     print("uncovered visible px:", int((visible & ~cover).sum()), "of", int(visible.sum()))

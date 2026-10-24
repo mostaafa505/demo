@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { site } from '../../config/site'
 import { Flip, gsap, useGSAP } from '../../motion/gsap'
-import { INTRO_KEY, markDone, markRevealed } from '../../motion/intro'
+import { markDone, markRevealed } from '../../motion/intro'
 import { EASE_IN, EASE_LONG } from '../../motion/tokens'
 
 const BASE = '/brand/intro/'
@@ -17,13 +17,13 @@ const RULE_START = '21.8% 50%'
 const COLUMN_WIDTH = 0.195
 
 /**
- * Opening sequence, once per visit: the column is built from its base up, the name is set beside
+ * Opening sequence on every load of the home page: the column is built from its base up, the name is set beside
  * it, a single light passes over the column, then the whole lock-up travels into the header
  * (GSAP Flip on desktop; a crossfade on smaller screens, where the header uses the three-line
  * mobile lock-up) while the navy screen folds up into the header bar.
  *
- * Shown only when the inline script in index.html set html.intro-active (first page of the visit,
- * motion welcome). Any click, scroll, touch or key ends it at its final state.
+ * Shown whenever the inline script in index.html set html.intro-active (every load of the home
+ * page, motion welcome). A click/tap or a key ends it at its final state; scrolling does not.
  */
 export function Intro() {
   const ref = useRef<HTMLDivElement>(null)
@@ -49,24 +49,20 @@ export function Intro() {
         markDone()
       }
       const skip = () => (tl ? tl.progress(1) : finish())
-      const events = ['pointerdown', 'wheel', 'touchstart', 'keydown'] as const
+      // A click/tap or a key ends it; scrolling does not.
+      const events = ['click', 'keydown'] as const
       const removeSkips = () => events.forEach((e) => window.removeEventListener(e, skip))
       events.forEach((e) => window.addEventListener(e, skip, { passive: true }))
 
-      // Too late to be worth it (slow first load), or layers not decoded within 1.2s: skip.
-      if (performance.now() > 3000) return void finish()
+      // Too late to be worth it (very slow load), or layers not decoded within 3s: skip.
+      if (performance.now() > 5000) return void finish()
       const imgs = Array.from(el.querySelectorAll('img'))
       const ready = Promise.all(imgs.map((img) => img.decode().catch(() => undefined)))
-      const timeout = new Promise<'late'>((r) => setTimeout(() => r('late'), 1200))
+      const timeout = new Promise<'late'>((r) => setTimeout(() => r('late'), 3000))
 
       Promise.race([ready, timeout]).then((result) => {
         if (finished) return
         if (result === 'late') return finish()
-        try {
-          sessionStorage.setItem(INTRO_KEY, '1')
-        } catch {
-          /* private mode: the intro may show again, which is harmless */
-        }
         tl = build()
       })
 
@@ -125,7 +121,7 @@ export function Intro() {
     { scope: ref },
   )
 
-  const columnMask = COLUMN.map((n) => `url(${BASE}${n}.png)`).join(',')
+  const columnMask = COLUMN.map((n) => `url(${BASE}${n}.webp)`).join(',')
 
   return (
     <div ref={ref} className="intro" aria-hidden="true">
@@ -136,7 +132,7 @@ export function Intro() {
         <div data-intro-logo className="relative aspect-[1680/453] w-[min(80vw,34rem)]">
           <span className="sr-only">{site.brand.wordmark}</span>
           {LAYERS.map((name) => (
-            <img key={name} data-layer={name} src={`${BASE}${name}.png`} alt="" width={1680} height={453} decoding="async" className="absolute inset-0 size-full" />
+            <img key={name} data-layer={name} src={`${BASE}${name}.webp`} alt="" width={1680} height={453} decoding="async" className="absolute inset-0 size-full" />
           ))}
           {/* Light band, masked by the column layers so it never touches the lettering */}
           <div

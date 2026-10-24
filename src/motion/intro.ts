@@ -3,7 +3,6 @@
  * animations. While html.intro-active is set, the header and hero wait for the intro's
  * "reveal" moment before playing their entrances.
  */
-export const INTRO_KEY = 'ufl-intro-seen'
 export const REVEAL_EVENT = 'intro:reveal'
 export const DONE_EVENT = 'intro:done'
 

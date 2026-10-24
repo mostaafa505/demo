@@ -54,13 +54,13 @@ the right language, so navigation links already work.
 - Headings are split by words grouped into lines (`splitLines.ts`) — never by characters, so Arabic stays
   joined. GSAP's SplitText is not used: its line detection assumes left-to-right text.
 - `prefers-reduced-motion`: nothing is hidden and nothing moves; counters show their final value.
-- Opening intro (`src/components/brand/Intro.tsx`): once per visit (sessionStorage), never with reduced
-  motion; any click, scroll, touch or key ends it. The column is built from its base, the name is
+- Opening intro (`src/components/brand/Intro.tsx`): on every load of the home page, never with reduced
+  motion; a click/tap or key ends it (scrolling does not). The column is built from its base, the name is
   unmasked, one light passes over the column, then the lock-up flies into the header (GSAP Flip on
   desktop, crossfade on smaller screens where the header shows the three-line mobile logo) while the
   navy screen folds into the header bar. Layers live in `public/brand/intro/` — 3× (1680×453) versions of
-  the client's `uae-logo-parts`, rebuilt from the original logo by `scripts/intro-parts.py`. Skipped if the
-  layers are not loaded within 1.2s.
+  the client's `uae-logo-parts` (WebP), rebuilt from the original logo by `scripts/intro-parts.py`. Skipped
+  if the layers are not loaded within 3s or the app has not started within 5s.
 
 ## Placeholders to review with the client
 
