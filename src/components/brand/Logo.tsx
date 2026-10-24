@@ -20,7 +20,7 @@ export function Logo({ variant = 'light', className = '' }: { variant?: Variant;
 /** Just the gold column from the logo, for the compact header. */
 export function LogoMark({ className = 'h-10' }: { className?: string }) {
   return (
-    <span className={`block aspect-[0.78] overflow-hidden ${className}`} aria-hidden="true">
+    <span dir="ltr" className={`block aspect-[0.78] overflow-hidden ${className}`} aria-hidden="true">
       <img src={logoLight} alt="" className="h-full w-auto max-w-none" decoding="async" />
     </span>
   )
