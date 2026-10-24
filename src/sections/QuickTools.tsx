@@ -17,7 +17,7 @@ function Tool({ icon, title, text, children, badge, muted, extra }: { icon: Reac
     <SpotlightCard theme="light" spotlightColor="#C9A45C" intensity={0.45} spotlightSize={260} borderGlow={0.9} style={card} className="h-full">
       <div className="flex h-full flex-col p-5 sm:p-6">
         <div className="flex items-start gap-4">
-          <span className={`grid size-14 shrink-0 place-items-center rounded-[14px] ${muted ? 'bg-sand text-muted' : 'bg-cream text-gold-deep'} ring-1 ring-inset ring-gold/20 [&_svg]:size-7`}>{icon}</span>
+          <span className={`grid size-14 shrink-0 place-items-center rounded-[0.875rem] ${muted ? 'bg-sand text-muted' : 'bg-cream text-gold-deep'} ring-1 ring-inset ring-gold/20 [&_svg]:size-7`}>{icon}</span>
           <div className="min-w-0 flex-1">
             <div className="flex items-center justify-between gap-3">
               <h3 className={`font-title text-[1.08rem] ${muted ? 'text-fg/75' : 'text-fg'}`}>{title}</h3>

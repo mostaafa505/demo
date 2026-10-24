@@ -59,7 +59,7 @@ export function Voices() {
             {t.lawyers.items.map((l, i) => (
               <li key={l.slug} data-reveal-item className="w-[62%] shrink-0 snap-center sm:w-auto">
                 <SmartLink href={l.href} className="group/lawyer flex h-full flex-col items-center rounded-[var(--radius-card)] border border-stone bg-white px-3 pb-4 pt-5 text-center shadow-[var(--shadow-card)] transition-[border-color,box-shadow] duration-500 hover:border-gold/45 hover:shadow-[var(--shadow-lift)]">
-                  <span className={`relative block overflow-hidden rounded-full ring-2 ring-gold/50 ring-offset-[3px] ring-offset-white ${i === 0 ? 'size-24' : 'size-[5.25rem]'}`}>
+                  <span className={`relative block overflow-hidden rounded-full ring-2 ring-gold/50 ring-offset-[0.1875rem] ring-offset-white ${i === 0 ? 'size-24' : 'size-[5.25rem]'}`}>
                     <img src={images.lawyers[l.slug]} alt={l.imageAlt} loading="lazy" className="size-full scale-[1.35] object-cover object-[50%_30%] transition-transform duration-700 group-hover/lawyer:scale-[1.42]" />
                   </span>
                   <h3 className="font-title mt-4 text-[1rem] text-fg">{l.name}</h3>

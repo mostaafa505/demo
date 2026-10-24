@@ -23,6 +23,7 @@ To replace a photo, drop the new file into `references/client/` under the same n
 | `الميراث.jpg` | `service-inheritance-*.webp` | Services, video card (mobile) |
 | `الوصايا.jpg` | `service-wills-*.webp` | Services |
 | `الفضايه لادوليه.jpg` | `service-international-*.webp` | Services, mega-menu |
+| `صوره مركز المعرفه.jpg` | `knowledge-gavel-*.webp` | Knowledge centre (desktop) |
 | `الامارات والمدن.jpg` | `service-emirates-*.webp` | Services, booking band background |
 | `ابو ظبي.jpg`, `دبي.jpg`, `الشارقه.jpg` | `city-*.webp` | Emirates & cities |
 | `fotter dektob.png` | `footer-art-*.webp` | Desktop footer background (baked-in logo removed; the real logo is set in code) |
@@ -36,7 +37,6 @@ To replace a photo, drop the new file into `references/client/` under the same n
 | `lawyer-ahmed-el-shawi.webp` | Lawyers | Portrait, 4:5, at least 800 × 1000, head and shoulders, plain warm background |
 | `lawyer-sara-mahmoud.webp` | Lawyers | Same lighting and background as the others |
 | `lawyer-karim-el-awady.webp` | Lawyers | Same lighting and background as the others |
-| `knowledge-gavel-books.webp` | Knowledge centre (desktop) | Library / gavel still, 3:4, at least 700 × 900 |
 
-Regenerate them with `python3 scripts/crop-references.py`, or replace the files with real photos of the same name.
+Regenerate the portraits with `python3 scripts/crop-references.py`, or replace the files with real photos of the same name.
 `public/og-image.webp` (social sharing, 1200 × 630) should also be replaced.

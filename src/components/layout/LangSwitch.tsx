@@ -11,7 +11,7 @@ export function LangSwitch({ compact = false, tone = 'dark' }: { compact?: boole
         to={switchHref}
         aria-label={t.a11y.switchLanguage}
         hrefLang={t.langSwitch.other.toLowerCase()}
-        className={`grid h-[34px] min-w-[34px] place-items-center px-1 font-[family-name:var(--font-latin)] text-[0.78rem] font-semibold tracking-[0.12em] transition-colors hover:text-gold-light ${tone === 'dark' ? 'text-ivory' : 'text-fg'}`}
+        className={`grid h-[2.125rem] min-w-[2.125rem] place-items-center px-1 font-[family-name:var(--font-latin)] text-[0.78rem] font-semibold tracking-[0.12em] transition-colors hover:text-gold-light ${tone === 'dark' ? 'text-ivory' : 'text-fg'}`}
       >
         {t.langSwitch.other}
       </Link>

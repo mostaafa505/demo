@@ -1,16 +1,19 @@
 import type { RefObject } from 'react'
-import { gsap, MOTION_OK, useGSAP } from './gsap'
+import { gsap, MOTION_OK, ScrollTrigger, SplitText, useGSAP } from './gsap'
 
 /**
- * Quiet scroll reveals for a section. Mark elements with:
+ * Scroll choreography for a section. Mark elements with:
  *
- *   data-reveal="title"   section opener: rises 16px, the ornament's hairlines draw outward
- *   data-reveal="panel"   framed panel: rises 20px
+ *   data-reveal="title"   section opener: heading rises line by line from a mask (never split by
+ *                         characters — Arabic stays joined), the ornament's hairlines draw, lead follows
+ *   data-reveal="panel"   framed panel: lifts and settles; its notch title drops in, ornament draws
+ *   data-reveal="card"    large card: opens from a rounded inset (clip-path)
  *   data-reveal="fade"    plain rise + fade
- *   data-reveal-group     container whose [data-reveal-item] children stagger in
- *   data-drift            image that drifts a few percent against the scroll inside its frame
+ *   data-reveal-group     container whose [data-reveal-item] children rise in, batched as they
+ *                         arrive; a [data-reveal-img] inside an item is uncovered from below
+ *   data-drift            photo that travels slower than its frame (scrubbed with the scroll)
  *
- * Everything plays once. With reduced motion nothing animates — content is simply there.
+ * Entrances play once. With reduced motion nothing animates — content is simply there.
  */
 export function useReveal(scope: RefObject<HTMLElement | null>) {
   useGSAP(
@@ -20,37 +23,63 @@ export function useReveal(scope: RefObject<HTMLElement | null>) {
       const mm = gsap.matchMedia()
       mm.add(MOTION_OK, () => {
         const q = gsap.utils.selector(root)
-        const once = (el: Element, start = 'top 88%') => ({ trigger: el, start, once: true })
+        const once = (el: Element, start = 'top 85%') => ({ trigger: el, start, once: true })
 
         q('[data-reveal="title"]').forEach((el) => {
+          const heading = el.querySelector('h2')
           const tl = gsap.timeline({ scrollTrigger: once(el) })
-          tl.from(el, { autoAlpha: 0, y: 16, duration: 0.8, ease: 'power3.out' })
+          if (heading) {
+            const split = SplitText.create(heading, { type: 'lines', mask: 'lines', linesClass: 'split-line' })
+            tl.from(split.lines, { yPercent: 110, duration: 1.1, stagger: 0.1, ease: 'expo.out' })
+          }
           const lines = el.querySelectorAll('[data-ornament-line]')
-          if (lines.length) tl.from(lines, { scaleX: 0, duration: 1, ease: 'expo.out' }, 0.2)
+          if (lines.length) tl.from(lines, { scaleX: 0, duration: 1.2, ease: 'expo.out' }, 0.25)
+          const rest = el.querySelectorAll(':scope > p, :scope > div')
+          if (rest.length) tl.from(rest, { autoAlpha: 0, y: 16, duration: 0.8, stagger: 0.08, ease: 'power3.out' }, 0.35)
         })
 
         q('[data-reveal="panel"]').forEach((el) => {
-          const tl = gsap.timeline({ scrollTrigger: once(el, 'top 90%') })
-          tl.from(el, { autoAlpha: 0, y: 24, duration: 0.9, ease: 'power3.out' })
+          const tl = gsap.timeline({ scrollTrigger: once(el, 'top 88%') })
+          tl.from(el, { autoAlpha: 0, y: 60, scale: 0.97, duration: 1.2, ease: 'expo.out' })
           const notch = el.querySelector('[data-panel-notch]')
-          if (notch) tl.from(notch, { y: -14, autoAlpha: 0, duration: 0.8, ease: 'back.out(1.6)' }, 0.25)
+          if (notch) tl.from(notch, { yPercent: -60, autoAlpha: 0, scale: 0.9, duration: 0.9, ease: 'back.out(1.7)' }, 0.3)
           const lines = el.querySelectorAll(':scope > div [data-ornament-line]')
-          if (lines.length) tl.from(lines, { scaleX: 0, duration: 1, ease: 'expo.out' }, 0.35)
+          if (lines.length) tl.from(lines, { scaleX: 0, duration: 1.2, ease: 'expo.out' }, 0.45)
+        })
+
+        q('[data-reveal="card"]').forEach((el) => {
+          gsap.fromTo(
+            el,
+            { clipPath: 'inset(8% 5% 8% 5% round 1.5rem)', autoAlpha: 0.4 },
+            { clipPath: 'inset(0% 0% 0% 0% round 1.5rem)', autoAlpha: 1, duration: 1.5, ease: 'expo.inOut', scrollTrigger: once(el, 'top 80%') },
+          )
         })
 
         q('[data-reveal="fade"]').forEach((el) => {
-          gsap.from(el, { autoAlpha: 0, y: 20, duration: 0.85, ease: 'power3.out', scrollTrigger: once(el, 'top 90%') })
+          gsap.from(el, { autoAlpha: 0, y: 30, duration: 1, ease: 'expo.out', scrollTrigger: once(el, 'top 88%') })
         })
 
-        // Depth: photographs travel slightly slower than their frames.
+        // Items rise in as they reach the viewport, in batches, so a row arrives together.
+        const items = q('[data-reveal-group] [data-reveal-item]')
+        if (items.length) {
+          gsap.set(items, { autoAlpha: 0, y: 50 })
+          const imgs = items.flatMap((item) => Array.from(item.querySelectorAll('[data-reveal-img]')))
+          gsap.set(imgs, { clipPath: 'inset(100% 0% 0% 0%)' })
+          ScrollTrigger.batch(items, {
+            start: 'top 90%',
+            once: true,
+            onEnter: (batch) => {
+              gsap.to(batch, { autoAlpha: 1, y: 0, duration: 1.1, stagger: 0.1, ease: 'expo.out', overwrite: true })
+              const batchImgs = batch.flatMap((item) => Array.from(item.querySelectorAll('[data-reveal-img]')))
+              if (batchImgs.length) gsap.to(batchImgs, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.3, stagger: 0.1, delay: 0.15, ease: 'expo.inOut' })
+            },
+          })
+        }
+
+        // Depth: photographs travel slower than their frames.
         q('[data-drift]').forEach((img) => {
           const frame = img.parentElement ?? img
-          gsap.fromTo(img, { yPercent: -5, scale: 1.12 }, { yPercent: 5, scale: 1.12, ease: 'none', scrollTrigger: { trigger: frame, start: 'top bottom', end: 'bottom top', scrub: true } })
-        })
-
-        q('[data-reveal-group]').forEach((group) => {
-          const items = group.querySelectorAll('[data-reveal-item]')
-          if (items.length) gsap.from(items, { autoAlpha: 0, y: 18, duration: 0.7, stagger: 0.06, ease: 'power3.out', scrollTrigger: once(group, 'top 88%') })
+          gsap.fromTo(img, { yPercent: -6, scale: 1.14 }, { yPercent: 6, scale: 1.14, ease: 'none', scrollTrigger: { trigger: frame, start: 'top bottom', end: 'bottom top', scrub: true } })
         })
       })
     },

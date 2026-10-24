@@ -19,7 +19,6 @@ CROPS = {
     "lawyer-ahmed-el-shawi": (M, (64, 1326, 250, 1428), 3),
     "lawyer-sara-mahmoud": (M, (266, 1326, 460, 1428), 3),
     "lawyer-karim-el-awady": (M, (477, 1326, 662, 1428), 3),
-    "knowledge-gavel-books": (D, (892, 1032, 1098, 1140), 3),
 }
 
 for name, (src, box, scale) in CROPS.items():

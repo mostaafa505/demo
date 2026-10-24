@@ -36,7 +36,7 @@ export function Footer() {
       const mm = gsap.matchMedia()
       mm.add(MOTION_OK, () => {
         const st = { trigger: ref.current, start: 'top 85%', once: true }
-        gsap.from('[data-footer-col]', { autoAlpha: 0, y: 18, duration: 0.8, stagger: 0.07, ease: 'power3.out', scrollTrigger: st })
+        gsap.from('[data-footer-col]', { autoAlpha: 0, y: 40, duration: 1.1, stagger: 0.08, ease: 'expo.out', scrollTrigger: st })
         gsap.fromTo('[data-footer-sheen]', { xPercent: -100, autoAlpha: 1 }, { xPercent: 260, duration: 3.2, ease: 'power2.inOut', delay: 0.5, scrollTrigger: st, onComplete: () => gsap.set('[data-footer-sheen]', { autoAlpha: 0 }) })
       })
     },
@@ -44,8 +44,9 @@ export function Footer() {
   )
 
   return (
-    <footer ref={ref} id="site-footer" className="relative isolate overflow-hidden bg-[#010d16] text-ivory">
+    <footer ref={ref} id="site-footer" className="relative isolate overflow-hidden bg-ink text-ivory">
       <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+      <div aria-hidden="true" className="khatam pointer-events-none absolute inset-0 opacity-[0.04]" />
       <DesktopFooter t={t} />
       <MobileFooter t={t} />
     </footer>
@@ -63,13 +64,13 @@ function DesktopFooter({ t }: { t: Content }) {
   return (
     <div className="hidden xl:block">
       {/* Physical layout is fixed (brand left, call to action right) in both languages, as in the reference. */}
-      <div dir="ltr" className="@container relative mx-auto aspect-[2167/726] w-full max-w-[1920px]">
+      <div dir="ltr" className="@container relative aspect-[2167/726] w-full">
         {/* Artwork, pinned to the bottom and faded into the ground beyond 1920px */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 border-0 [mask-image:linear-gradient(to_right,transparent,black_2%,black_98%,transparent)] min-[1921px]:[mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 -z-10">
           <Picture pic={images.footerArt} sizes="100vw" alt="" className="block w-full" />
           {/* Light travelling along the horizon */}
           <div className="absolute start-0 w-[76%] overflow-hidden mix-blend-screen" style={{ bottom: `calc(${ART_BAR} - 0.5cqw)`, height: '1cqw' }}>
-            <span data-footer-sheen className="invisible absolute inset-y-0 start-0 w-1/4 bg-[radial-gradient(50%_50%_at_50%_50%,rgb(255_230_170/0.9),transparent)] blur-[2px]" />
+            <span data-footer-sheen className="invisible absolute inset-y-0 start-0 w-1/4 bg-[radial-gradient(50%_50%_at_50%_50%,rgb(255_230_170/0.9),transparent)] blur-[0.125rem]" />
           </div>
         </div>
 
@@ -79,9 +80,9 @@ function DesktopFooter({ t }: { t: Content }) {
         >
           {/* Brand — sits above the skyline */}
           <Col dir={dir} first>
-            <Logo variant="light" className="h-[clamp(52px,3.6cqw,66px)]" />
+            <Logo variant="light" className="h-[clamp(3.25rem,3.6cqw,4.125rem)]" />
             <span aria-hidden="true" className="mt-[1.3cqw] block h-px w-full bg-gradient-to-r from-gold/0 via-gold/45 to-gold/0" />
-            <p className="mt-[1.2cqw] text-[clamp(14px,0.95cqw,17px)] leading-[1.85] text-gold-light/90">{t.footer.about}</p>
+            <p className="mt-[1.2cqw] text-[clamp(0.875rem,0.95cqw,1.0625rem)] leading-[1.85] text-gold-light/90">{t.footer.about}</p>
             <Socials className="mt-[1.4cqw]" />
           </Col>
 
@@ -92,7 +93,7 @@ function DesktopFooter({ t }: { t: Content }) {
           {/* Contact */}
           <Col dir={dir}>
             <ColumnTitle>{t.footer.contactTitle}</ColumnTitle>
-            <ul className="mt-[1.3cqw] space-y-[0.95cqw] text-[clamp(14px,0.92cqw,16.5px)] text-ivory/85">
+            <ul className="mt-[1.3cqw] space-y-[0.95cqw] text-[clamp(0.875rem,0.92cqw,1.0312rem)] text-ivory/85">
               <ContactRow icon={MapPin}>
                 <a href={site.address.mapUrl} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-gold-light">
                   {site.address[lang]}
@@ -123,17 +124,17 @@ function DesktopFooter({ t }: { t: Content }) {
 
           {/* Call to action — sits above the gold sweep */}
           <Col dir={dir} className="!pl-[1.8cqw] !pr-0">
-            <h2 className="font-display text-[clamp(19px,1.4cqw,28px)] leading-[1.45] text-ivory">
+            <h2 className="font-display text-[clamp(1.1875rem,1.4cqw,1.75rem)] leading-[1.45] text-ivory">
               {t.footer.cta.title} <span className="block text-[1.18em] text-gold-light">{t.footer.cta.titleAccent}</span>
             </h2>
-            <p className="mt-[0.8cqw] text-[clamp(14px,0.92cqw,16.5px)] leading-relaxed text-ivory/65">{t.footer.cta.text}</p>
+            <p className="mt-[0.8cqw] text-[clamp(0.875rem,0.92cqw,1.0312rem)] leading-relaxed text-ivory/65">{t.footer.cta.text}</p>
             <div className="mt-[1.4cqw] flex flex-col gap-[0.8cqw]">
               <ButtonLink href="/#consultation" variant="gold" size="md" className="w-full">
-                <CalendarDays className="size-[18px]" strokeWidth={1.6} aria-hidden="true" />
+                <CalendarDays className="size-[1.125rem]" strokeWidth={1.6} aria-hidden="true" />
                 {t.footer.cta.primary}
               </ButtonLink>
               <ButtonLink href="/#assess" variant="outline-gold" size="md" className="w-full">
-                <FileText className="size-[18px]" strokeWidth={1.6} aria-hidden="true" />
+                <FileText className="size-[1.125rem]" strokeWidth={1.6} aria-hidden="true" />
                 {t.footer.cta.secondary}
               </ButtonLink>
             </div>
@@ -142,7 +143,7 @@ function DesktopFooter({ t }: { t: Content }) {
 
         {/* Legal bar — starts exactly on the art's gold horizon */}
         <div className="absolute inset-x-0 bottom-0 flex items-center" style={{ height: ART_BAR, paddingInline: '4cqw' }}>
-          <div dir={dir} className="flex w-full items-center justify-between gap-8 text-[clamp(12.5px,0.8cqw,14.5px)] text-ivory/55">
+          <div dir={dir} className="flex w-full items-center justify-between gap-8 text-[clamp(0.7812rem,0.8cqw,0.9062rem)] text-ivory/55">
             <p>
               <Copyright text={t.footer.copyright} />
             </p>
@@ -186,9 +187,9 @@ function Col({ dir, first, className = '', children }: { dir: 'rtl' | 'ltr'; fir
 
 function ColumnTitle({ children }: { children: string }) {
   return (
-    <h3 className="font-title text-[clamp(16px,1.08cqw,19px)] text-gold-light">
+    <h3 className="font-title text-[clamp(1rem,1.08cqw,1.1875rem)] text-gold-light">
       {children}
-      <span aria-hidden="true" className="mt-[0.7cqw] block h-[2px] w-[1.8cqw] min-w-6 rounded-full bg-gold-grad" />
+      <span aria-hidden="true" className="mt-[0.7cqw] block h-[0.125rem] w-[1.8cqw] min-w-6 rounded-full bg-gold-grad" />
     </h3>
   )
 }
@@ -201,7 +202,7 @@ function LinkColumn({ dir, title, links }: { dir: 'rtl' | 'ltr'; title: string; 
         <ul className="mt-[1.3cqw] space-y-[0.75cqw]">
           {links.map((link) => (
             <li key={link.href + link.label}>
-              <SmartLink href={link.href} className="group/fl inline-flex items-center gap-2 text-[clamp(13.5px,0.92cqw,16.5px)] text-ivory/80 transition-colors hover:text-gold-light">
+              <SmartLink href={link.href} className="group/fl inline-flex items-center gap-2 text-[clamp(0.8438rem,0.92cqw,1.0312rem)] text-ivory/80 transition-colors hover:text-gold-light">
                 <ForwardChevron className="size-3.5 shrink-0 text-gold/75 transition-transform duration-300 group-hover/fl:translate-x-0.5 rtl:group-hover/fl:-translate-x-0.5" />
                 {link.label}
               </SmartLink>
@@ -232,7 +233,7 @@ function Socials({ className = '' }: { className?: string }) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={SOCIAL_LABELS[key]}
-            className="grid size-[clamp(34px,2.3cqw,42px)] place-items-center rounded-full border border-gold/55 text-gold transition-colors duration-300 hover:border-gold hover:bg-gold hover:text-ink [&_svg]:size-[45%]"
+            className="grid size-[clamp(2.125rem,2.3cqw,2.625rem)] place-items-center rounded-full border border-gold/55 text-gold transition-colors duration-300 hover:border-gold hover:bg-gold hover:text-ink [&_svg]:size-[45%]"
           >
             <SocialIcon name={key} />
           </a>

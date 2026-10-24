@@ -27,7 +27,7 @@ export function Services() {
                 href={item.href}
                 className="group/card flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-stone bg-white shadow-[var(--shadow-card)] transition-[transform,box-shadow,border-color] duration-500 ease-[var(--ease-out-expo)] can-hover:hover:-translate-y-1 can-hover:hover:border-gold/45 can-hover:hover:shadow-[var(--shadow-lift)]"
               >
-                <span className="relative block aspect-[16/11] overflow-hidden">
+                <span data-reveal-img className="relative block aspect-[16/11] overflow-hidden">
                   <span data-drift className="block size-full">
                     <Picture
                       pic={images.services[item.image]}

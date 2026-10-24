@@ -33,6 +33,7 @@ PHOTOS = {
     "الشارقه.jpg": ("city-sharjah", (480, 800, 1200), None),
     "slide mobil.png": ("hero-slide", (800, 1280, 1774), None),
     "slide dektop.png": ("hero-desktop", (1024, 1440, 1774), None),
+    "صوره مركز المعرفه.jpg": ("knowledge-gavel", (480, 800, 1024), None),
 }
 
 
@@ -126,6 +127,12 @@ def footer_art():
     edge = np.minimum.reduce([xx - l, r - 1 - xx, yy - t, b - 1 - yy]).astype(np.float64)
     mask = np.clip(edge / pad, 0, 1)[..., None]
     arr[t:b, l:r] = arr[t:b, l:r] * (1 - mask) + patch * mask
+    # Grade the navy-teal ground to the site's ink (#0A0F1A, the header colour) so header and
+    # footer read as one material; the skyline and gold keep their own colour.
+    ground = np.median(arr[200:300, 900:1500].reshape(-1, 3), axis=0)
+    ink = np.array([10, 15, 26], dtype=np.float64)
+    weight = np.clip(1 - arr.max(axis=2, keepdims=True) / 70, 0, 1)
+    arr = np.clip(arr + (ink - ground) * weight, 0, 255)
     clean = Image.fromarray(arr.round().astype(np.uint8))
     for width in (1400, 2167):
         out = clean if width == w else clean.resize((width, round(h * width / w)), Image.LANCZOS)

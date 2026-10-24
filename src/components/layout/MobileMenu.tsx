@@ -73,7 +73,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
       className="invisible fixed inset-0 z-[60] flex flex-col overflow-y-auto bg-ink text-ivory xl:hidden"
       style={{ clipPath: 'inset(0% 0% 100% 0%)' }}
     >
-      <div className="container-site flex h-[72px] shrink-0 items-center justify-between border-b border-gold/15">
+      <div className="container-site flex h-[4.5rem] shrink-0 items-center justify-between border-b border-gold/15">
         <SmartLink href="/" onClick={onClose} tabIndex={open ? 0 : -1}>
           <Logo variant="mobile" className="h-9" />
         </SmartLink>
@@ -153,24 +153,24 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
         <ul data-mm-fade className="mt-3 space-y-3 text-[0.95rem]">
           <li>
             <a href={site.phones.mobile.href} tabIndex={open ? 0 : -1} className="flex items-center gap-3">
-              <Phone className="size-[18px] text-gold" strokeWidth={1.5} aria-hidden="true" />
+              <Phone className="size-[1.125rem] text-gold" strokeWidth={1.5} aria-hidden="true" />
               <span dir="ltr">{site.phones.mobile.display}</span>
             </a>
           </li>
           <li>
             <a href={site.whatsapp.href} target="_blank" rel="noopener noreferrer" tabIndex={open ? 0 : -1} className="flex items-center gap-3">
-              <SocialIcon name="whatsapp" className="size-[18px] text-gold" />
+              <SocialIcon name="whatsapp" className="size-[1.125rem] text-gold" />
               <span dir="ltr">{site.whatsapp.display}</span>
             </a>
           </li>
           <li>
             <a href={`mailto:${site.email}`} tabIndex={open ? 0 : -1} className="flex items-center gap-3">
-              <Mail className="size-[18px] text-gold" strokeWidth={1.5} aria-hidden="true" />
+              <Mail className="size-[1.125rem] text-gold" strokeWidth={1.5} aria-hidden="true" />
               {site.email}
             </a>
           </li>
           <li className="flex items-center gap-3 text-ivory/70">
-            <MapPin className="size-[18px] text-gold" strokeWidth={1.5} aria-hidden="true" />
+            <MapPin className="size-[1.125rem] text-gold" strokeWidth={1.5} aria-hidden="true" />
             {site.address.short[lang]}
           </li>
         </ul>

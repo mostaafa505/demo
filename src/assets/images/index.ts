@@ -1,5 +1,5 @@
 // Client photography (references/client), exported by scripts/process-assets.py as responsive WebP.
-// Lawyer portraits and the knowledge still are low-resolution crops of the reference — see IMAGES.md.
+// Lawyer portraits are still low-resolution crops of the reference — see IMAGES.md.
 import cityAbuDhabi1200 from './city-abu-dhabi-1200.webp'
 import cityAbuDhabi480 from './city-abu-dhabi-480.webp'
 import cityAbuDhabi800 from './city-abu-dhabi-800.webp'
@@ -17,7 +17,9 @@ import heroDesktop1774 from './hero-desktop-1774.webp'
 import heroSlide1280 from './hero-slide-1280.webp'
 import heroSlide1774 from './hero-slide-1774.webp'
 import heroSlide800 from './hero-slide-800.webp'
-import gavelBooks from './knowledge-gavel-books.webp'
+import gavel1024 from './knowledge-gavel-1024.webp'
+import gavel480 from './knowledge-gavel-480.webp'
+import gavel800 from './knowledge-gavel-800.webp'
 import ahmed from './lawyer-ahmed-el-shawi.webp'
 import karim from './lawyer-karim-el-awady.webp'
 import sara from './lawyer-sara-mahmoud.webp'
@@ -79,5 +81,5 @@ export const images = {
   lawyers: { 'ahmed-el-shawi': ahmed, 'sara-mahmoud': sara, 'karim-el-awady': karim } as Record<string, string>,
   ctaBand: pic({ 800: emirates800, 1200: emirates1200, 2000: emirates2000 }),
   footerArt: pic({ 1400: footerArt1400, 2167: footerArt2167 }),
-  gavelBooks,
+  knowledgeGavel: pic({ 480: gavel480, 800: gavel800, 1024: gavel1024 }),
 }

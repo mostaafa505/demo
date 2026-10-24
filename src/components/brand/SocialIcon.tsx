@@ -37,7 +37,7 @@ const PATHS: Record<SocialKey, React.ReactNode> = {
   ),
 }
 
-export function SocialIcon({ name, className = 'size-[18px]' }: { name: SocialKey; className?: string }) {
+export function SocialIcon({ name, className = 'size-[1.125rem]' }: { name: SocialKey; className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={className}>
       {PATHS[name]}

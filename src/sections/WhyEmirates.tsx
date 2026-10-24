@@ -26,8 +26,8 @@ export function WhyEmirates() {
               const Icon = PILLAR_ICONS[i]
               return (
                 <li key={p.title} data-reveal-item className="flex items-start gap-3.5 rounded-[var(--radius-card)] border border-stone bg-white p-4 shadow-[var(--shadow-card)]">
-                  <span className="grid size-11 shrink-0 place-items-center rounded-[12px] bg-cream text-gold-deep ring-1 ring-inset ring-gold/20">
-                    <Icon className="size-[22px]" strokeWidth={1.4} aria-hidden="true" />
+                  <span className="grid size-11 shrink-0 place-items-center rounded-[0.75rem] bg-cream text-gold-deep ring-1 ring-inset ring-gold/20">
+                    <Icon className="size-[1.375rem]" strokeWidth={1.4} aria-hidden="true" />
                   </span>
                   <span className="min-w-0">
                     <h3 className="font-title text-[0.98rem] leading-snug text-fg">{p.title}</h3>
@@ -54,7 +54,7 @@ export function WhyEmirates() {
             {t.emirates.items.map((city) => (
               <li key={city.slug} data-reveal-item>
                 <SmartLink href={city.href} className="group/city flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-stone bg-white shadow-[var(--shadow-card)] transition-[border-color,box-shadow] duration-500 hover:border-gold/45 hover:shadow-[var(--shadow-lift)]">
-                  <span className="relative block aspect-[4/3.4] overflow-hidden">
+                  <span data-reveal-img className="relative block aspect-[4/3.4] overflow-hidden">
                     <span data-drift className="block size-full"><Picture pic={images.cities[city.slug]} sizes="(min-width: 1024px) 200px, 31vw" alt={city.imageAlt} className="size-full object-cover transition-[scale] duration-[1.1s] ease-[var(--ease-out-expo)] group-hover/city:scale-[1.07]" /></span>
                   </span>
                   <span className="relative flex flex-1 flex-col items-center px-2 pb-3 pt-6 text-center sm:px-3 sm:pb-4">

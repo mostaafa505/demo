@@ -39,7 +39,7 @@ export function Knowledge() {
           {/* Desktop: formats beside the library still, as in the client's layout */}
           <div className="hidden gap-3 lg:grid lg:grid-cols-[1.25fr_repeat(5,1fr)]">
             <div data-reveal="fade" className="relative overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-card)]">
-              <img src={images.gavelBooks} alt="" loading="lazy" data-drift className="absolute inset-0 size-full object-cover" />
+              <Picture pic={images.knowledgeGavel} sizes="(min-width: 1440px) 18vw, 260px" alt="" data-drift className="absolute inset-0 size-full object-cover object-[38%_60%]" />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/30 to-transparent" />
             </div>
             <ul data-reveal-group className="contents">
@@ -48,7 +48,7 @@ export function Knowledge() {
                 return (
                   <li key={c.key} data-reveal-item>
                     <SmartLink href={c.href} className="group/cat flex h-full flex-col rounded-[var(--radius-card)] border border-stone bg-white p-4 shadow-[var(--shadow-card)] transition-[border-color,box-shadow] duration-500 hover:border-gold/45 hover:shadow-[var(--shadow-lift)]">
-                      <span className="grid size-11 place-items-center rounded-[12px] bg-cream text-gold-deep ring-1 ring-inset ring-gold/20">
+                      <span className="grid size-11 place-items-center rounded-[0.75rem] bg-cream text-gold-deep ring-1 ring-inset ring-gold/20">
                         <Icon className="size-5" strokeWidth={1.5} aria-hidden="true" />
                       </span>
                       <span className="font-title mt-3 block text-[0.98rem] leading-snug text-fg">{c.title}</span>
@@ -70,7 +70,7 @@ export function Knowledge() {
             {t.knowledge.articles.map((a) => (
               <li key={a.href} data-reveal-item className="w-[72%] shrink-0 snap-center sm:w-[44%]">
                 <SmartLink href={a.href} className="flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-stone bg-white shadow-[var(--shadow-card)]">
-                  <span className="relative block aspect-[16/10] overflow-hidden">
+                  <span data-reveal-img className="relative block aspect-[16/10] overflow-hidden">
                     <Picture pic={ARTICLE_IMAGES[a.image]} sizes="72vw" alt="" className="size-full object-cover" />
                     <span className="absolute bottom-2 end-2 rounded-full bg-ink/80 px-2.5 py-0.5 text-[0.72rem] font-semibold text-gold-light backdrop-blur-sm">{a.category}</span>
                     {a.image === 'video' && (

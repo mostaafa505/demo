@@ -50,7 +50,7 @@ With `prefers-reduced-motion`, Lenis stops smoothing and nothing animates. Skill
 
 ## Placeholders to review with the client
 
-- Lawyer portraits and the knowledge-centre still (low-resolution crops of the references) — see IMAGES.md.
+- Lawyer portraits (low-resolution crops of the references) — see IMAGES.md.
 - Phone numbers, email (`info@uaefamilylaw.ae`), address, TRN and social links in `src/config/site.ts`.
 - Testimonials (initials, cities, quotes) and statistics (+15 years, +3,500 consultations, 98%, +1,200 cases).
 - FAQ answers — drafted for layout, need legal review.

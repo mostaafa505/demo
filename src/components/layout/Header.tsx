@@ -16,8 +16,6 @@ import { SmartLink } from '../ui/SmartLink'
 import { LangSwitch } from './LangSwitch'
 import { MobileMenu } from './MobileMenu'
 
-const TOP_ROW_H = 92
-
 /**
  * Two-row header from the brand-core reference: identity, search and actions on
  * top; navigation below. Fixed, with a spacer so nothing jumps when the top row
@@ -69,7 +67,7 @@ export function Header() {
     () => {
       const row = topRowRef.current
       if (!row) return
-      gsap.to(row, { height: compact ? 0 : TOP_ROW_H, autoAlpha: compact ? 0 : 1, duration: 0.5, ease: 'power3.out', overwrite: 'auto' })
+      gsap.to(row, { height: compact ? 0 : 'auto', autoAlpha: compact ? 0 : 1, duration: 0.5, ease: 'power3.out', overwrite: 'auto' })
       if (compact) gsap.fromTo('[data-compact-only]', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, delay: 0.1 })
     },
     { dependencies: [compact], scope: headerRef },
@@ -85,24 +83,24 @@ export function Header() {
         <div aria-hidden="true" className="khatam pointer-events-none absolute inset-0 opacity-[0.05]" />
         <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold/45 to-transparent" />
         {/* Reading progress: a gold hairline that fills as the page scrolls */}
-        <div aria-hidden="true" data-progress className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gold-grad rtl:origin-right" />
+        <div aria-hidden="true" data-progress className="pointer-events-none absolute inset-x-0 bottom-0 h-[0.125rem] origin-left scale-x-0 bg-gold-grad rtl:origin-right" />
 
         {/* ---------- Desktop ---------- */}
         <div className="relative hidden xl:block">
-          <div ref={topRowRef} style={{ height: TOP_ROW_H }} className="overflow-hidden">
-            <div className="container-site flex h-[92px] items-center gap-6">
+          <div ref={topRowRef} className="overflow-hidden">
+            <div className="container-site flex h-[5.75rem] items-center gap-6">
               <SmartLink href="/" aria-label={site.brand.wordmark} className="shrink-0">
-                <Logo variant="light" className="h-[58px]" />
+                <Logo variant="light" className="h-[3.625rem]" />
               </SmartLink>
               <HeaderSearch />
               <div className="ms-auto flex items-center gap-5">
                 <PhoneBlock />
                 <ButtonLink href="/#consultation" variant="gold" size="md">
-                  <CalendarDays className="size-[18px]" strokeWidth={1.6} aria-hidden="true" />
+                  <CalendarDays className="size-[1.125rem]" strokeWidth={1.6} aria-hidden="true" />
                   {t.header.book}
                 </ButtonLink>
                 <ButtonLink href={site.clientPortalUrl} variant="outline-gold" size="md">
-                  <UserRound className="size-[18px]" strokeWidth={1.6} aria-hidden="true" />
+                  <UserRound className="size-[1.125rem]" strokeWidth={1.6} aria-hidden="true" />
                   {t.header.login}
                 </ButtonLink>
                 <LangSwitch />
@@ -138,15 +136,15 @@ export function Header() {
 
         {/* ---------- Mobile / tablet ---------- */}
         <div className="relative xl:hidden">
-          <div className="container-site flex h-[72px] items-center gap-1.5 xs:gap-2 sm:gap-3">
+          <div className="container-site flex h-[4.5rem] items-center gap-1.5 xs:gap-2 sm:gap-3">
             <SmartLink href="/" aria-label={site.brand.wordmark} className="me-auto min-w-0 shrink">
-              <Logo variant="mobile" className="h-9 max-[379px]:h-[30px] sm:h-10" />
+              <Logo variant="mobile" className="h-9 max-[379px]:h-[1.875rem] sm:h-10" />
             </SmartLink>
             <a href={site.phones.mobile.href} aria-label={t.a11y.call} className={iconBtn}>
-              <Phone className="size-[17px]" strokeWidth={1.6} aria-hidden="true" />
+              <Phone className="size-[1.0625rem]" strokeWidth={1.6} aria-hidden="true" />
             </a>
             <a href={site.whatsapp.href} target="_blank" rel="noopener noreferrer" aria-label={t.a11y.whatsapp} className={`${iconBtn} max-[399px]:hidden`}>
-              <SocialIcon name="whatsapp" className="size-[17px]" />
+              <SocialIcon name="whatsapp" className="size-[1.0625rem]" />
             </a>
             <ButtonLink href="/#consultation" variant="gold" size="sm" className="max-sm:!px-3">
               <CalendarDays className="size-4 max-sm:hidden" strokeWidth={1.6} aria-hidden="true" />
@@ -207,7 +205,7 @@ function HeaderSearch() {
       <label htmlFor="site-search" className="sr-only">
         {t.header.searchLabel}
       </label>
-      <Search className="pointer-events-none absolute start-3.5 top-1/2 size-[18px] -translate-y-1/2 text-ivory/55" strokeWidth={1.6} aria-hidden="true" />
+      <Search className="pointer-events-none absolute start-3.5 top-1/2 size-[1.125rem] -translate-y-1/2 text-ivory/55" strokeWidth={1.6} aria-hidden="true" />
       <input
         id="site-search"
         name="q"
@@ -352,7 +350,7 @@ function MegaMenu({ id, item, open, onNavigate }: { id: string; item: NavItem; o
             {item.children!.map((child, i) => (
               <li key={child.href} data-menu-item>
                 <SmartLink href={child.href} onClick={onNavigate} tabIndex={open ? 0 : -1} className="group/item flex items-center gap-4 rounded-[var(--radius-card)] p-3 transition-colors hover:bg-ivory/[0.04]">
-                  <span className="relative block size-16 shrink-0 overflow-hidden rounded-[10px] ring-1 ring-gold/25">
+                  <span className="relative block size-16 shrink-0 overflow-hidden rounded-[0.625rem] ring-1 ring-gold/25">
                     <Picture pic={images.services[services[i]?.image ?? 'civil-marriage']} sizes="64px" alt="" className="size-full object-cover transition-transform duration-700 group-hover/item:scale-110" />
                   </span>
                   <span className="min-w-0">

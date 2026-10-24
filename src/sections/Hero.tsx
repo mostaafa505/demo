@@ -38,8 +38,8 @@ export function Hero() {
         })
 
         const scrub = { trigger: ref.current, start: 'top top', end: 'bottom top', scrub: true }
-        gsap.to('[data-hero-drift]', { yPercent: 9, ease: 'none', scrollTrigger: scrub })
-        gsap.to('[data-hero-copy]', { y: -40, ease: 'none', scrollTrigger: scrub })
+        gsap.to('[data-hero-drift]', { yPercent: 10, scale: 1.06, ease: 'none', scrollTrigger: scrub })
+        gsap.to('[data-hero-copy]', { y: -70, autoAlpha: 0.2, ease: 'none', scrollTrigger: { ...scrub, end: 'bottom 25%' } })
       })
     },
     { scope: ref, dependencies: [lang] },
@@ -85,12 +85,12 @@ export function Hero() {
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-ivory via-ivory/60 to-ivory/0" />
       </div>
 
-      <div className="container-site relative -mt-20 pb-12 sm:-mt-28 lg:mt-0 lg:flex lg:min-h-[clamp(560px,calc(100svh-var(--header-h)),720px)] lg:items-center lg:py-14">
+      <div className="container-site relative -mt-20 pb-12 sm:-mt-28 lg:mt-0 lg:flex lg:min-h-[clamp(35rem,calc(100svh-var(--header-h)),45rem)] lg:items-center lg:py-14">
         <div data-hero-copy className="lg:max-w-[min(46rem,54%)]">
           <h1 id="hero-title" data-hero-title className="font-display text-display text-fg">
             {t.hero.title}
           </h1>
-          <span data-hero-rule aria-hidden="true" className="mt-6 block h-[2px] w-20 rounded-full bg-gold-grad" />
+          <span data-hero-rule aria-hidden="true" className="mt-6 block h-[0.125rem] w-20 rounded-full bg-gold-grad" />
           <p data-hero-text className="text-lead mt-6 max-w-[56ch] text-muted">
             {t.hero.text}
           </p>
@@ -111,7 +111,7 @@ export function Hero() {
             {t.hero.trust.map((item, i) => {
               const Icon = TRUST_ICONS[i]
               return (
-                <li key={item} data-hero-trust className="flex items-center gap-3 rounded-[var(--radius-card)] border border-stone/80 bg-white/70 p-3 text-[0.86rem] font-medium leading-snug text-fg/80 shadow-[var(--shadow-card)] backdrop-blur-[2px]">
+                <li key={item} data-hero-trust className="flex items-center gap-3 rounded-[var(--radius-card)] border border-stone/80 bg-white/70 p-3 text-[0.86rem] font-medium leading-snug text-fg/80 shadow-[var(--shadow-card)] backdrop-blur-[0.125rem]">
                   <Medallion size="sm">
                     <Icon strokeWidth={1.6} aria-hidden="true" />
                   </Medallion>
