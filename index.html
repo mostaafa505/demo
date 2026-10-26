@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0A0F1A" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>الأحوال الشخصية لغير المسلمين في الإمارات | مكتب أحمد الشاوي للاستشارات القانونية</title>
+    <meta name="description" content="دعم قانوني متخصص لغير المسلمين في الإمارات: الزواج المدني، الطلاق، الحضانة، النفقة، الميراث، الوصايا والقضايا الدولية. احجز استشارة في أبوظبي أو عبر الفيديو." />
+    <link rel="alternate" hreflang="ar" href="https://uaefamilylaw.ae/" />
+    <link rel="alternate" hreflang="en" href="https://uaefamilylaw.ae/en" />
+    <link rel="alternate" hreflang="x-default" href="https://uaefamilylaw.ae/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="UAE Non-Muslim Family Law — Ahmed El-Shawi Legal Consultancy" />
+    <meta property="og:image" content="/og-image.webp" />
+    <script>
+      // Animation start states apply only with JavaScript; if the app has not started within
+      // 4s (script blocked or failed), they are lifted so the pre-rendered content stays visible.
+      ;(function (d) {
+        d.classList.add('js-anim')
+        setTimeout(function () {
+          if (window.__appReady) return
+          d.classList.remove('js-anim')
+          window.__animFallback = true // the app will not re-hide content when it arrives late
+        }, 4000)
+      })(document.documentElement)
+
+      // Opening intro: on every load of the home page, never with reduced motion. Its layers are
+      // preloaded; if they or the app are very late, the intro is dropped and the site shows.
+      ;(function (d) {
+        var path = location.pathname.replace(/\/$/, '') || '/'
+        if (path !== '/' && path !== '/en') return
+        if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return
+        d.classList.add('intro-active')
+        var layers = 'col-base col-shaft-1 col-shaft-2 col-shaft-3 col-shaft-4 col-capital col-top text-title text-subtitle underline'.split(' ')
+        var loaded = 0
+        layers.forEach(function (n) {
+          var l = document.createElement('link')
+          l.rel = 'preload'
+          l.as = 'image'
+          l.href = '/brand/intro/' + n + '.webp'
+          l.onload = function () {
+            loaded++
+          }
+          document.head.appendChild(l)
+        })
+        var drop = function () {
+          d.classList.remove('intro-active')
+          window.__introSkipped = true
+        }
+        // Layers still not in after 3s (very slow connection): skip rather than hold a blank screen.
+        setTimeout(function () {
+          if (loaded < layers.length && !window.__introStarted) drop()
+        }, 3000)
+        // Script failed: never hold the site behind the intro.
+        setTimeout(function () {
+          if (!window.__introStarted) drop()
+        }, 5000)
+      })(document.documentElement)
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

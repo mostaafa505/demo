@@ -1,0 +1,346 @@
+@import 'tailwindcss';
+
+/* Fonts are self-hosted through Fontsource (display=swap is built in). */
+@import '@fontsource-variable/noto-kufi-arabic/wght.css';
+@import '@fontsource/ibm-plex-sans-arabic/300.css';
+@import '@fontsource/ibm-plex-sans-arabic/400.css';
+@import '@fontsource/ibm-plex-sans-arabic/500.css';
+@import '@fontsource/ibm-plex-sans-arabic/600.css';
+@import '@fontsource-variable/cormorant-garamond/wght.css';
+@import '@fontsource-variable/manrope/wght.css';
+
+@custom-variant rtl (&:where([dir='rtl'], [dir='rtl'] *));
+@custom-variant ltr (&:where([dir='ltr'], [dir='ltr'] *));
+@custom-variant can-hover (@media (hover: hover) and (pointer: fine));
+
+/* ------------------------------------------------------------------ */
+/* Design tokens                                                       */
+/* ------------------------------------------------------------------ */
+@theme {
+  --color-ink: #0a0f1a;
+  --color-ink-2: #0e1626;
+  --color-navy: #111a2b;
+  --color-gold: #c9a45c;
+  --color-gold-light: #e6cb8e;
+  --color-gold-deep: #9c7a3c;
+  --color-gold-ink: #7a5b26;
+  --color-ivory: #faf7f1;
+  --color-sand: #f3ecdf;
+  --color-stone: #e9dfcc;
+  --color-cream: #fbf3e4;
+  --color-fg: #141821;
+  --color-muted: #5b6170;
+  --color-urgent: #b42318;
+  --color-urgent-deep: #8f1b12;
+
+  --font-heading: var(--ff-heading);
+  --font-sans: var(--ff-body);
+  --font-latin-display: 'Cormorant Garamond Variable', 'Cormorant Garamond', Georgia, serif;
+  --font-latin: 'Manrope Variable', 'Manrope', system-ui, sans-serif;
+
+  --text-display: clamp(2.2rem, 1.5rem + 2.6vw, 3.7rem);
+  --text-h2: clamp(1.75rem, 1.35rem + 1.5vw, 2.6rem);
+  --text-h3: clamp(1.08rem, 1rem + 0.3vw, 1.25rem);
+  --text-lead: clamp(1.02rem, 0.97rem + 0.25vw, 1.18rem);
+
+  --radius-card: 12px;
+  --radius-btn: 8px;
+
+  --shadow-card: 0 1px 1px rgb(20 24 33 / 0.03), 0 10px 30px -18px rgb(80 60 20 / 0.28);
+  --shadow-lift: 0 2px 2px rgb(20 24 33 / 0.03), 0 22px 44px -22px rgb(80 60 20 / 0.38);
+  --shadow-gold: 0 10px 24px -12px rgb(156 122 60 / 0.75);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+
+  --breakpoint-xs: 25rem;
+}
+
+/* Per-language faces and rhythm */
+:root {
+  --ff-heading: 'Noto Kufi Arabic Variable', 'Noto Kufi Arabic', 'IBM Plex Sans Arabic', sans-serif;
+  --ff-body: 'IBM Plex Sans Arabic', 'Manrope Variable', system-ui, sans-serif;
+  --heading-weight: 700;
+  --ff-title: var(--ff-heading);
+  --title-weight: 600;
+  --heading-lh: 1.45;
+  --heading-tracking: 0;
+  --lh-body: 1.85;
+  --header-h: 9.25rem;
+}
+
+:root:lang(en) {
+  --ff-heading: 'Cormorant Garamond Variable', 'Cormorant Garamond', Georgia, serif;
+  --ff-body: 'Manrope Variable', 'Manrope', system-ui, sans-serif;
+  --heading-weight: 600;
+  --ff-title: 'Manrope Variable', 'Manrope', system-ui, sans-serif;
+  --title-weight: 700;
+  --heading-lh: 1.12;
+  --heading-tracking: -0.01em;
+  --lh-body: 1.65;
+}
+
+@media (max-width: 1279px) {
+  :root {
+    --header-h: 4.5rem;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+@layer base {
+  /*
+   * Fluid scale for large screens: the layout is drawn at 1440px and grows with the
+   * viewport beyond it (every size is in rem), so a 1920px screen sees the same
+   * composition at ~1.33×, not a small page floating in empty margins.
+   */
+  html {
+    font-size: 100%;
+  }
+  @media (min-width: 1440px) {
+    html {
+      font-size: min(calc(100vw / 90), 1.5rem);
+    }
+  }
+
+  html {
+    background: var(--color-ink);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background: var(--color-ivory);
+    color: var(--color-fg);
+    font-family: var(--ff-body);
+    line-height: var(--lh-body);
+    font-size: 1rem;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-gold) 35%, transparent);
+    color: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Utilities                                                           */
+/* ------------------------------------------------------------------ */
+@utility container-site {
+  width: 100%;
+  max-width: 82.5rem;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 3.5vw, 2.5rem);
+}
+
+@utility font-display {
+  font-family: var(--ff-heading);
+  font-weight: var(--heading-weight);
+  line-height: var(--heading-lh);
+  letter-spacing: var(--heading-tracking);
+}
+
+/* Card titles: same family as headings, a step lighter */
+@utility font-title {
+  font-family: var(--ff-title);
+  font-weight: var(--title-weight);
+  line-height: 1.5;
+}
+
+@utility text-display {
+  font-size: var(--text-display);
+}
+
+@utility text-h2 {
+  font-size: var(--text-h2);
+}
+
+@utility text-h3 {
+  font-size: var(--text-h3);
+}
+
+@utility text-lead {
+  font-size: var(--text-lead);
+}
+
+@utility bg-gold-grad {
+  background-image: linear-gradient(135deg, #ecd398 0%, #c9a45c 46%, #a8843f 100%);
+}
+
+@utility text-gold-grad {
+  background-image: linear-gradient(135deg, #ecd398 0%, #c9a45c 46%, #9c7a3c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Fine paper grain for ivory and sand grounds */
+@utility paper {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.36 0 0 0 0 0.2 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Khatam (eight-point star) lattice for dark grounds — drawn in gold at very low opacity */
+@utility khatam {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23C9A45C' stroke-width='0.6' opacity='0.5'%3E%3Cpath d='M36 14l6.4 15.6L58 36l-15.6 6.4L36 58l-6.4-15.6L14 36l15.6-6.4z'/%3E%3Cpath d='M20.4 20.4h31.2v31.2H20.4z' transform='rotate(45 36 36)'/%3E%3Cpath d='M20.4 20.4h31.2v31.2H20.4z'/%3E%3Cpath d='M0 36h14M58 36h14M36 0v14M36 58v14'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 72px 72px;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Lenis (inlined from lenis/dist/lenis.css) */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis [data-lenis-prevent],
+.lenis [data-lenis-prevent-wheel],
+.lenis [data-lenis-prevent-touch],
+.lenis [data-lenis-prevent-vertical],
+.lenis [data-lenis-prevent-horizontal] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/*
+ * Initial states for scroll and load animations. Only applied once the app has
+ * mounted (html.js-anim) and only when motion is welcome, so content is never
+ * hidden if the script fails or the visitor prefers reduced motion.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .js-anim [data-anim='fade-up'],
+  .js-anim [data-anim='stagger'] > *,
+  .js-anim [data-anim-frame],
+  .js-anim [data-anim-capsule],
+  .js-anim [data-anim-lead],
+  .js-anim [data-anim='section-head'] [data-ornament-mark],
+  .js-anim [data-header-row],
+  .js-anim [data-header-nav] > li,
+  .js-anim [data-hero-text],
+  .js-anim [data-hero-cta] > *,
+  .js-anim [data-hero-trust] {
+    opacity: 0;
+  }
+  .js-anim [data-anim='title'],
+  .js-anim [data-anim='section-head'] h2,
+  .js-anim [data-hero-title] {
+    visibility: hidden;
+  }
+  .js-anim [data-anim='img-reveal'] {
+    clip-path: inset(100% 0 0 0);
+  }
+  .js-anim [data-hero-photo] {
+    transform: scale(1.08);
+  }
+  .js-anim [data-anim='line'],
+  .js-anim [data-anim='section-head'] [data-ornament-line],
+  .js-anim [data-hero-rule] {
+    transform: scaleX(0);
+  }
+}
+
+/* Opening intro (components/brand/Intro.tsx) — only while html.intro-active is set */
+.intro {
+  display: none;
+}
+.intro-active .intro {
+  display: block;
+}
+.intro-active:not(.intro-revealed) [data-site-header] {
+  visibility: hidden;
+}
+.intro-active [data-header-logo] img {
+  opacity: 0;
+}
+.intro-active [data-layer^='col-shaft'] {
+  transform: scaleY(0);
+}
+.intro-active [data-layer='col-base'],
+.intro-active [data-layer='underline'] {
+  transform: scaleX(0);
+}
+.intro-active [data-layer='col-capital'],
+.intro-active [data-layer='col-top'] {
+  opacity: 0;
+}
+.intro-active [data-layer='text-title'],
+.intro-active [data-layer='text-subtitle'] {
+  clip-path: inset(0 100% 0 0);
+}
+
+/* Gold-leaf sheen across primary buttons on hover — travels with the reading direction */
+@utility sheen {
+  overflow: hidden;
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(105deg, transparent 30%, rgb(255 250 235 / 0.55) 50%, transparent 70%);
+    transform: translateX(-120%);
+  }
+  [dir='rtl'] &::after {
+    transform: translateX(120%);
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    &:hover::after {
+      transform: translateX(120%);
+      transition: transform 0.9s var(--ease-out-quart);
+    }
+    [dir='rtl'] &:hover::after {
+      transform: translateX(-120%);
+    }
+  }
+}
+
+/* SplitText masks: room for Arabic ascenders/descenders inside the mask */
+.split-line-mask {
+  padding-block: 0.12em;
+  margin-block: -0.12em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
