@@ -202,6 +202,39 @@ export interface Content {
   }
   actionBar: { book: string; whatsapp: string; call: string; emergency: string }
   placeholder: { title: string; text: string; back: string }
+  contact: {
+    meta: { title: string; description: string }
+    title: string
+    subtitle: string
+    intro: string
+    bookCta: string
+    whatsappCta: string
+    cards: { call: { title: string; note: string }; whatsapp: { title: string; note: string }; email: { title: string; note: string }; office: { title: string } }
+    form: {
+      title: string
+      lead: string
+      name: string
+      email: string
+      phone: string
+      countryCode: string
+      type: string
+      typePlaceholder: string
+      message: string
+      messagePlaceholder: string
+      consent: string
+      consentLink: string
+      submit: string
+      submitting: string
+      errors: { name: string; email: string; phone: string; type: string; message: string; consent: string }
+      success: { title: string; text: string; again: string }
+    }
+    promise: string
+    office: { title: string; directions: string; openMap: string; mapTitle: string }
+    reach: { title: string; text: string }[]
+    hours: { title: string; note: string }
+    faq: { title: string; viewAll: string; items: { q: string; a: string }[] }
+    ready: { title: string; text: string }
+  }
   about: {
     meta: { title: string; description: string }
     breadcrumbHome: string

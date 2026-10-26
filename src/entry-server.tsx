@@ -22,6 +22,6 @@ export function render(url: string) {
   )
   const lang = url === '/en' || url.startsWith('/en/') ? 'en' : 'ar'
   const t = lang === 'en' ? en : ar
-  const meta = /\/about$/.test(url) ? t.about.meta : t.meta
+  const meta = /\/about$/.test(url) ? t.about.meta : /\/contact$/.test(url) ? t.contact.meta : t.meta
   return { html, lang, dir: lang === 'ar' ? 'rtl' : 'ltr', title: meta.title, description: meta.description }
 }

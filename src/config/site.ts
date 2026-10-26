@@ -23,6 +23,8 @@ export const site = {
     en: 'Al Mamoura, Abu Dhabi, United Arab Emirates',
     short: { ar: 'أبوظبي، المعمورة', en: 'Abu Dhabi, Al Mamoura' },
     mapUrl: 'https://maps.google.com/?q=Al+Mamoura+Abu+Dhabi',
+    mapEmbed: 'https://www.google.com/maps?q=Al+Mamoura+Abu+Dhabi&z=14&output=embed',
+    directionsUrl: 'https://www.google.com/maps/dir/?api=1&destination=Al+Mamoura+Abu+Dhabi',
   },
   hours: {
     ar: { days: 'الأحد – الخميس', time: '9:00 ص – 5:00 م' },

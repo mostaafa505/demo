@@ -45,7 +45,7 @@ export function Faq() {
   )
 }
 
-function FaqItem({ q, a, open, onToggle }: { q: string; a: string; open: boolean; onToggle: () => void }) {
+export function FaqItem({ q, a, open, onToggle }: { q: string; a: string; open: boolean; onToggle: () => void }) {
   const id = useId()
   const panelRef = useRef<HTMLDivElement>(null)
   const first = useRef(true)

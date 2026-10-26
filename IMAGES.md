@@ -27,6 +27,8 @@ To replace a photo, drop the new file into `references/client/` under the same n
 | `about/Cinematic Executive Portrait in Warm Office.png` | `about-founder-*.webp` | About: our story (founder) |
 | `about/Luxurious Conference Room with Skyline Views.png` | `about-approach-*.webp` | About: our approach |
 | `about/Corporate Skyline Collaboration and Signing.png` | `about-team-1..3-*.webp` (three panels cut out) | About: team |
+| `contact/Gemini_Generated_Image_7tdemg7tdemg7tde.jpg` | `contact-meeting-*.webp` | Contact: hero and "ready to help" card |
+| `contact/Gemini_Generated_Image_pcrd02pcrd02pcrd.jpg` | `contact-scales-*.webp` | Contact: beside the message form |
 | `الامارات والمدن.jpg` | `service-emirates-*.webp` | Services, booking band background |
 | `ابو ظبي.jpg`, `دبي.jpg`, `الشارقه.jpg` | `city-*.webp` | Emirates & cities |
 | `fotter dektob.png` | `footer-art-*.webp` | Desktop footer background (baked-in logo removed; the real logo is set in code) |

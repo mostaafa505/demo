@@ -1,4 +1,4 @@
-// Pre-render the finished pages (home, about) in both languages into static HTML so the first paint does not
+// Pre-render the finished pages (home, about, contact) in both languages into static HTML so the first paint does not
 // wait for JavaScript. The client hydrates it (src/main.tsx). Run after both Vite builds.
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
@@ -15,6 +15,8 @@ for (const [url, file] of [
   ['/en', 'dist/en/index.html'],
   ['/about', 'dist/about/index.html'],
   ['/en/about', 'dist/en/about/index.html'],
+  ['/contact', 'dist/contact/index.html'],
+  ['/en/contact', 'dist/en/contact/index.html'],
 ]) {
   const { html, lang, dir, title, description } = render(url)
   const page = template

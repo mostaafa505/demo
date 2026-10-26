@@ -36,6 +36,8 @@ PHOTOS = {
     "صوره مركز المعرفه.jpg": ("knowledge-gavel", (480, 800, 1024), None),
     "about/Cinematic Executive Portrait in Warm Office.png": ("about-founder", (800, 1200, 1798), None),
     "about/Luxurious Conference Room with Skyline Views.png": ("about-approach", (800, 1400, 2170), None),
+    "contact/Gemini_Generated_Image_7tdemg7tdemg7tde.jpg": ("contact-meeting", (1024, 1600, 2400), None),
+    "contact/Gemini_Generated_Image_pcrd02pcrd02pcrd.jpg": ("contact-scales", (600, 900, 1300), None),
 }
 
 

@@ -39,8 +39,8 @@ Vercel builds it with the settings in `vercel.json` (Vite, `dist/`, SPA rewrites
 | Photos and logos (generated from `references/client/`) | `src/assets/` — see [IMAGES.md](IMAGES.md) |
 | Reference designs from the client | `references/` |
 
-Routes: `/` (Arabic) and `/en` (English) for the home page, `/about` and `/en/about` for About us
-(content from `references/client/about/UAEFamilyLaw_pages_9-10.pdf`, page 9). Every other path renders a "page in preparation" placeholder in
+Routes: `/` (Arabic) and `/en` (English) for the home page, `/about` and `/en/about` for About us, `/contact` and `/en/contact` for Contact us
+(content from `references/client/about/UAEFamilyLaw_pages_9-10.pdf`, pages 9 and 10). Every other path renders a "page in preparation" placeholder in
 the right language, so navigation links already work.
 
 ## Motion

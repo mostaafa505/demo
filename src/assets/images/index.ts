@@ -60,6 +60,12 @@ import team2480 from './about-team-2-480.webp'
 import team2644 from './about-team-2-644.webp'
 import team3480 from './about-team-3-480.webp'
 import team3717 from './about-team-3-717.webp'
+import contactMeeting1024 from './contact-meeting-1024.webp'
+import contactMeeting1600 from './contact-meeting-1600.webp'
+import contactMeeting2400 from './contact-meeting-2400.webp'
+import contactScales1300 from './contact-scales-1300.webp'
+import contactScales600 from './contact-scales-600.webp'
+import contactScales900 from './contact-scales-900.webp'
 import type { ServiceImage } from '../../content/types'
 
 export interface Picture {
@@ -96,6 +102,10 @@ export const images = {
     founder: pic({ 800: aboutFounder800, 1200: aboutFounder1200, 1798: aboutFounder1798 }),
     approach: pic({ 800: aboutApproach800, 1400: aboutApproach1400, 2170: aboutApproach2170 }),
     team: [pic({ 480: team1480, 717: team1717 }), pic({ 480: team2480, 644: team2644 }), pic({ 480: team3480, 717: team3717 })],
+  },
+  contact: {
+    meeting: pic({ 1024: contactMeeting1024, 1600: contactMeeting1600, 2400: contactMeeting2400 }),
+    scales: pic({ 600: contactScales600, 900: contactScales900, 1300: contactScales1300 }),
   },
   footerArt: pic({ 1400: footerArt1400, 2167: footerArt2167 }),
   knowledgeGavel: pic({ 480: gavel480, 800: gavel800, 1024: gavel1024 }),
