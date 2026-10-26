@@ -5,6 +5,7 @@ import { Footer } from './components/layout/Footer'
 import { Header } from './components/layout/Header'
 import { MobileActionBar } from './components/layout/MobileActionBar'
 import { useLang } from './i18n/LanguageProvider'
+import { About } from './pages/About'
 import { Home } from './pages/Home'
 import { Placeholder } from './pages/Placeholder'
 
@@ -31,6 +32,8 @@ export function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/en" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/en/about" element={<About />} />
           <Route path="*" element={<Placeholder key={pathname} />} />
         </Routes>
       </main>

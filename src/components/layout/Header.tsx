@@ -1,6 +1,6 @@
 import { CalendarDays, ChevronDown, Home, Menu, Phone, Search, Siren, UserRound } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { images } from '../../assets/images'
 import { site } from '../../config/site'
 import type { NavItem } from '../../content/types'
@@ -240,7 +240,14 @@ function HeaderSearch() {
 /* ------------------------------------------------------------------ */
 
 function DesktopNav({ items, openIndex, setOpenIndex }: { items: NavItem[]; openIndex: number | null; setOpenIndex: (i: number | null) => void }) {
-  const { t } = useLang()
+  const { t, localize } = useLang()
+  const { pathname } = useLocation()
+  const path = pathname.replace(/\/$/, '') || '/'
+  // The current section: Home on the home page, otherwise the item whose path the page sits under.
+  const isCurrent = (href: string) => {
+    const target = localize(href)
+    return href === '/' ? path === target : path === target || path.startsWith(target + '/')
+  }
   const navRef = useRef<HTMLElement>(null)
   const closeTimer = useRef<number | undefined>(undefined)
   const openTimer = useRef<number | undefined>(undefined)
@@ -270,10 +277,11 @@ function DesktopNav({ items, openIndex, setOpenIndex }: { items: NavItem[]; open
           const hasMenu = !!item.children?.length
           const open = openIndex === i
           const isHome = item.href === '/'
+          const current = isCurrent(item.href)
           return (
             <li key={item.href} className="relative flex h-full items-center" onPointerEnter={() => (hasMenu ? scheduleOpen(i) : scheduleClose())}>
               {i > 1 && <span aria-hidden="true" className="h-4 w-px bg-ivory/12" />}
-              {isHome ? (
+              {isHome && current ? (
                 <SmartLink
                   href="/"
                   aria-current="page"
@@ -283,15 +291,23 @@ function DesktopNav({ items, openIndex, setOpenIndex }: { items: NavItem[]; open
                   {item.label}
                 </SmartLink>
               ) : hasMenu ? (
-                <button type="button" aria-expanded={open} aria-controls={`menu-${i}`} onClick={() => setOpenIndex(open ? null : i)} className={navItemClass(open)}>
+                <button
+                  type="button"
+                  aria-expanded={open}
+                  aria-controls={`menu-${i}`}
+                  aria-current={current ? 'page' : undefined}
+                  onClick={() => setOpenIndex(open ? null : i)}
+                  className={navItemClass(open || current)}
+                >
                   {item.label}
                   <ChevronDown className={`size-3.5 opacity-60 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} strokeWidth={1.8} aria-hidden="true" />
-                  <NavUnderline active={open} />
+                  <NavUnderline active={open || current} />
                 </button>
               ) : (
-                <SmartLink href={item.href} className={navItemClass(false)}>
+                <SmartLink href={item.href} aria-current={current ? 'page' : undefined} className={navItemClass(current)}>
+                  {isHome && <Home className="size-4" strokeWidth={1.8} aria-hidden="true" />}
                   {item.label}
-                  <NavUnderline active={false} />
+                  <NavUnderline active={current} />
                 </SmartLink>
               )}
               {hasMenu && !item.mega && <Dropdown id={`menu-${i}`} item={item} open={open} onNavigate={() => setOpenIndex(null)} />}

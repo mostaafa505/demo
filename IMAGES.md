@@ -24,6 +24,9 @@ To replace a photo, drop the new file into `references/client/` under the same n
 | `الوصايا.jpg` | `service-wills-*.webp` | Services |
 | `الفضايه لادوليه.jpg` | `service-international-*.webp` | Services, mega-menu |
 | `صوره مركز المعرفه.jpg` | `knowledge-gavel-*.webp` | Knowledge centre (desktop) |
+| `about/Cinematic Executive Portrait in Warm Office.png` | `about-founder-*.webp` | About: our story (founder) |
+| `about/Luxurious Conference Room with Skyline Views.png` | `about-approach-*.webp` | About: our approach |
+| `about/Corporate Skyline Collaboration and Signing.png` | `about-team-1..3-*.webp` (three panels cut out) | About: team |
 | `الامارات والمدن.jpg` | `service-emirates-*.webp` | Services, booking band background |
 | `ابو ظبي.jpg`, `دبي.jpg`, `الشارقه.jpg` | `city-*.webp` | Emirates & cities |
 | `fotter dektob.png` | `footer-art-*.webp` | Desktop footer background (baked-in logo removed; the real logo is set in code) |

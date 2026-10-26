@@ -444,6 +444,61 @@ export const en: Content = {
     ],
   },
   actionBar: { book: 'Book a consultation', whatsapp: 'WhatsApp', call: 'Call', emergency: 'Urgent' },
+  about: {
+    meta: {
+      title: 'About us | Ahmed El-Shawi Legal Consultancy',
+      description: 'A firm dedicated to non-Muslim personal status law in the UAE: our story, mission, vision, values and team.',
+    },
+    breadcrumbHome: 'Home',
+    title: 'About us',
+    subtitle: 'Legal expertise dedicated to non-Muslim personal status law in the UAE',
+    intro: 'We give individuals and families practical, clear legal advice and solutions at every stage of life, with a particular focus on non-Muslim personal status matters under UAE law.',
+    story: {
+      title: 'Our story',
+      text: 'Ahmed El-Shawi Legal Consultancy was founded as a firm dedicated to non-Muslim personal status law in the UAE, committed to high-quality legal services that combine a deep understanding of the law, practical experience and a humane approach to families and individuals of every nationality.',
+      cta: 'Contact the founder',
+      founderName: 'Ahmed El-Shawi',
+      founderRole: 'Legal Consultant',
+      founderFocus: 'Practising non-Muslim family law in the UAE',
+      founderAlt: 'Ahmed El-Shawi in his office',
+    },
+    highlights: [
+      { value: 'Personal approach', label: 'Every case handled with care and detail' },
+      { value: 'Full coverage', label: 'Across all the emirates' },
+      { value: 'Hundreds', label: 'of successful cases' },
+      { value: 'Thousands', label: 'of clients of many nationalities' },
+      { value: '+15', label: 'years of legal experience' },
+    ],
+    mission: {
+      title: 'Our mission',
+      text: "To provide practical, clear legal advice and solutions that protect our clients' rights and support their family and financial stability, with the highest standards of professionalism, confidentiality and transparency.",
+    },
+    vision: {
+      title: 'Our vision',
+      text: 'To be the first choice for non-Muslim individuals and families in the UAE in personal status matters, through leading, trusted and innovative legal services.',
+    },
+    values: { title: 'Our values', items: ['Client care', 'Quality', 'Integrity', 'Confidentiality'] },
+    approach: {
+      title: 'Our approach',
+      text: 'We believe every case is unique, so we take a personal approach: understanding what each client needs and giving clear, tailored legal solutions grounded in practical experience and a deep knowledge of UAE law.',
+      imageAlt: "The firm's meeting room overlooking the city skyline",
+    },
+    team: {
+      title: 'Our team',
+      text: 'Our firm brings together lawyers and legal consultants dedicated to non-Muslim personal status matters in the UAE, combining legal expertise, practical understanding and a commitment to client service.',
+      imageAlts: ['The team in a meeting', 'Signing a legal document', 'A legal consultant at work'],
+    },
+    help: {
+      title: 'Let us help',
+      text: 'Contact us today to discuss your legal situation with one of our specialists.',
+      cta: 'Book your consultation',
+      items: [
+        { title: 'Direct contact', text: 'Phone / WhatsApp' },
+        { title: 'Online consultation', text: 'From anywhere in the world' },
+        { title: 'Flexible appointments', text: 'In person or online' },
+      ],
+    },
+  },
   placeholder: {
     title: 'This page is being prepared',
     text: 'This page is part of the next phase of the site. Head back to the home page, or book a consultation directly.',

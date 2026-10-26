@@ -34,6 +34,8 @@ PHOTOS = {
     "slide mobil.png": ("hero-slide", (800, 1280, 1774), None),
     "slide dektop.png": ("hero-desktop", (1024, 1440, 1774), None),
     "صوره مركز المعرفه.jpg": ("knowledge-gavel", (480, 800, 1024), None),
+    "about/Cinematic Executive Portrait in Warm Office.png": ("about-founder", (800, 1200, 1798), None),
+    "about/Luxurious Conference Room with Skyline Views.png": ("about-approach", (800, 1400, 2170), None),
 }
 
 
@@ -114,6 +116,13 @@ def logos():
     print("logo-mobile-light", img.size, "bg", bg)
 
 
+def about_team():
+    """The client's team image is three photos on white; cut each panel out."""
+    strip = Image.open(SRC / "about" / "Corporate Skyline Collaboration and Signing.png").convert("RGB")
+    for i, (x0, x1) in enumerate([(7, 740), (755, 1415), (1430, 2163)], 1):
+        save_widths(strip.crop((x0 + 8, 202, x1 - 8, 488)), f"about-team-{i}", (480, 720))
+
+
 def footer_art():
     """Client's footer artwork without its baked-in logo (the real logo is laid over it in code)."""
     img = Image.open(SRC / "fotter dektob.png").convert("RGB")
@@ -154,3 +163,5 @@ if __name__ == "__main__":
         logos()
     if only is None or "footer" in only:
         footer_art()
+    if only is None or "about-team" in only:
+        about_team()

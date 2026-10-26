@@ -202,4 +202,19 @@ export interface Content {
   }
   actionBar: { book: string; whatsapp: string; call: string; emergency: string }
   placeholder: { title: string; text: string; back: string }
+  about: {
+    meta: { title: string; description: string }
+    breadcrumbHome: string
+    title: string
+    subtitle: string
+    intro: string
+    story: { title: string; text: string; cta: string; founderName: string; founderRole: string; founderFocus: string; founderAlt: string }
+    highlights: { value: string; label: string }[]
+    mission: { title: string; text: string }
+    vision: { title: string; text: string }
+    values: { title: string; items: string[] }
+    approach: { title: string; text: string; imageAlt: string }
+    team: { title: string; text: string; imageAlts: string[] }
+    help: { title: string; text: string; cta: string; items: { title: string; text: string }[] }
+  }
 }

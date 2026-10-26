@@ -48,6 +48,18 @@ import maintenance800 from './service-maintenance-800.webp'
 import wills1200 from './service-wills-1200.webp'
 import wills480 from './service-wills-480.webp'
 import wills800 from './service-wills-800.webp'
+import aboutApproach1400 from './about-approach-1400.webp'
+import aboutApproach2170 from './about-approach-2170.webp'
+import aboutApproach800 from './about-approach-800.webp'
+import aboutFounder1200 from './about-founder-1200.webp'
+import aboutFounder1798 from './about-founder-1798.webp'
+import aboutFounder800 from './about-founder-800.webp'
+import team1480 from './about-team-1-480.webp'
+import team1717 from './about-team-1-717.webp'
+import team2480 from './about-team-2-480.webp'
+import team2644 from './about-team-2-644.webp'
+import team3480 from './about-team-3-480.webp'
+import team3717 from './about-team-3-717.webp'
 import type { ServiceImage } from '../../content/types'
 
 export interface Picture {
@@ -80,6 +92,11 @@ export const images = {
   } as Record<string, Picture>,
   lawyers: { 'ahmed-el-shawi': ahmed, 'sara-mahmoud': sara, 'karim-el-awady': karim } as Record<string, string>,
   ctaBand: pic({ 800: emirates800, 1200: emirates1200, 2000: emirates2000 }),
+  about: {
+    founder: pic({ 800: aboutFounder800, 1200: aboutFounder1200, 1798: aboutFounder1798 }),
+    approach: pic({ 800: aboutApproach800, 1400: aboutApproach1400, 2170: aboutApproach2170 }),
+    team: [pic({ 480: team1480, 717: team1717 }), pic({ 480: team2480, 644: team2644 }), pic({ 480: team3480, 717: team3717 })],
+  },
   footerArt: pic({ 1400: footerArt1400, 2167: footerArt2167 }),
   knowledgeGavel: pic({ 480: gavel480, 800: gavel800, 1024: gavel1024 }),
 }
